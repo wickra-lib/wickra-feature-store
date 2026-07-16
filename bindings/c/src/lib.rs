@@ -39,7 +39,17 @@ pub const WICKRA_FEATURE_STORE_ERR_PANIC: i32 = -3;
 /// An opaque handle to a feature-store instance. Created by
 /// [`wickra_feature_store_new`] and destroyed by [`wickra_feature_store_free`];
 /// never dereferenced by the caller.
-pub struct WickraFeatureStore(FeatureStore);
+///
+/// The handle caches the most recent command's response in `pending` so the
+/// classic two-call length protocol (measure with `out = NULL`, then write) does
+/// not execute the command twice. That matters because feature-store commands are
+/// *stateful* — `push`, `set_spec` and `reset` mutate the store — so a naive
+/// double execution would apply the mutation twice. The cache is keyed on the raw
+/// command bytes and cleared once the response has been delivered.
+pub struct WickraFeatureStore {
+    inner: FeatureStore,
+    pending: Option<(Vec<u8>, String)>,
+}
 
 /// Read a NUL-terminated C string as `&str`, or `None` on null / bad UTF-8.
 ///
@@ -67,7 +77,10 @@ pub unsafe extern "C" fn wickra_feature_store_new(
         return ptr::null_mut();
     };
     match catch_unwind(AssertUnwindSafe(|| FeatureStore::new(json))) {
-        Ok(Ok(store)) => Box::into_raw(Box::new(WickraFeatureStore(store))),
+        Ok(Ok(store)) => Box::into_raw(Box::new(WickraFeatureStore {
+            inner: store,
+            pending: None,
+        })),
         _ => ptr::null_mut(),
     }
 }
@@ -108,27 +121,43 @@ pub unsafe extern "C" fn wickra_feature_store_command(
     let Some(cmd) = (unsafe { opt_str(cmd_json) }) else {
         return WICKRA_FEATURE_STORE_ERR_UTF8;
     };
-    let store = unsafe { &mut (*handle).0 };
-    let response = match catch_unwind(AssertUnwindSafe(|| store.command_json(cmd))) {
-        // `command_json` folds domain errors into `{"ok":false,...}` JSON, so a
-        // top-level `Err` should not occur; surface it in-band all the same
-        // rather than inventing a new negative code.
-        Ok(result) => result.unwrap_or_else(|err| {
-            format!(
-                "{{\"ok\":false,\"error\":{}}}",
-                json_string(&err.to_string())
-            )
-        }),
-        Err(_) => return WICKRA_FEATURE_STORE_ERR_PANIC,
-    };
+    let store = unsafe { &mut *handle };
 
-    let bytes = response.as_bytes();
-    let len = bytes.len();
-    if len < cap && !out.is_null() {
-        unsafe {
-            ptr::copy_nonoverlapping(bytes.as_ptr(), out.cast::<u8>(), len);
-            *out.add(len) = 0;
+    // Only execute the command when this call is not a retry of the same command
+    // bytes still sitting in the cache. The measure-then-write two-call protocol
+    // must apply a stateful command (`push`, `reset`, …) exactly once.
+    let is_retry = matches!(&store.pending, Some((bytes, _)) if bytes.as_slice() == cmd.as_bytes());
+    if !is_retry {
+        let response = match catch_unwind(AssertUnwindSafe(|| store.inner.command_json(cmd))) {
+            // `command_json` folds domain errors into `{"ok":false,...}` JSON, so
+            // a top-level `Err` should not occur; surface it in-band all the same
+            // rather than inventing a new negative code.
+            Ok(result) => result.unwrap_or_else(|err| {
+                format!(
+                    "{{\"ok\":false,\"error\":{}}}",
+                    json_string(&err.to_string())
+                )
+            }),
+            Err(_) => return WICKRA_FEATURE_STORE_ERR_PANIC,
+        };
+        store.pending = Some((cmd.as_bytes().to_vec(), response));
+    }
+
+    let (len, delivered) = {
+        let response = &store.pending.as_ref().expect("pending set above").1;
+        let bytes = response.as_bytes();
+        let len = bytes.len();
+        let delivered = len < cap && !out.is_null();
+        if delivered {
+            unsafe {
+                ptr::copy_nonoverlapping(bytes.as_ptr(), out.cast::<u8>(), len);
+                *out.add(len) = 0;
+            }
         }
+        (len, delivered)
+    };
+    if delivered {
+        store.pending = None;
     }
     i32::try_from(len).unwrap_or(i32::MAX)
 }
