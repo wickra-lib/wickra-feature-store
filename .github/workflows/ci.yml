@@ -299,6 +299,29 @@ jobs:
           go vet ./...
           go test ./...
 
+  csharp:
+    name: C# on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-rust
+      - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+      - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5.4.0
+        with:
+          dotnet-version: "8.0"
+      # The test project copies the native library from target/release (see the
+      # <Content> items), so build it in the release profile here.
+      - name: Build the C ABI library
+        run: cargo build -p wickra-feature-store-c --release
+      - name: Test the C# binding
+        run: dotnet test bindings/csharp/WickraFeatureStore.Tests/WickraFeatureStore.Tests.csproj -c Release
+
   coverage:
     name: Coverage
     runs-on: ubuntu-latest
