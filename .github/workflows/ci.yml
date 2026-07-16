@@ -214,6 +214,34 @@ jobs:
       - name: Run Node tests
         run: cd bindings/node && node --test
 
+  wasm:
+    name: WASM
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-rust
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+      - name: Install wasm-pack
+        uses: taiki-e/install-action@bffeee26d4db9be238a4ea78d8826604ebcb594d # v2.82.5
+        with:
+          tool: wasm-pack
+      - name: Build the wasm binding (web target)
+        run: wasm-pack build --target web
+        working-directory: bindings/wasm
+      # Golden parity: build for Node, fold the spec through the wasm core and
+      # assert the matrix is byte-identical to the native core — the same
+      # canonical feature matrix every other binding produces.
+      - name: Build the wasm binding (nodejs target)
+        run: wasm-pack build --target nodejs
+        working-directory: bindings/wasm
+      - name: Assert wasm results match the native core
+        run: node --test
+        working-directory: bindings/wasm
+
   coverage:
     name: Coverage
     runs-on: ubuntu-latest
