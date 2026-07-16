@@ -32,7 +32,7 @@ arrow = ["dep:arrow", "feature-store-core/arrow"]
 # `--no-default-features` job still exercises the core's sequential path through
 # this edge; the native build turns `parallel`/`arrow` back on via `--all-features`
 # / `--features arrow`.
-feature-store-core = { path = "../feature-store-core", default-features = false }
+feature-store-core = { workspace = true, default-features = false }
 serde = { workspace = true }
 serde_json.workspace = true
 clap.workspace = true
