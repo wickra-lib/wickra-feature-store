@@ -1,0 +1,27 @@
+[package]
+name = "wickra-feature-store-python"
+description = "Python bindings for wickra-feature-store: the data-driven feature-matrix core."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme = "README.md"
+keywords.workspace = true
+categories.workspace = true
+publish = false
+
+[lib]
+name = "_wickra_feature_store"
+crate-type = ["cdylib"]
+
+[lints]
+workspace = true
+
+[dependencies]
+# The core, without the native `arrow` columnar feature — Parquet is a file
+# format and never crosses the JSON boundary; the CLI or native Rust API writes it.
+feature-store-core = { workspace = true, default-features = false }
+pyo3 = { version = "0.29", features = ["extension-module", "abi3-py39"] }
