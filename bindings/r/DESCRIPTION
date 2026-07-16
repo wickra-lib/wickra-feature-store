@@ -1,0 +1,16 @@
+Package: wickrafeaturestore
+Type: Package
+Title: Deterministic ML-Ready Feature Matrices
+Version: 0.1.0
+Authors@R: person("kingchenc", role = c("aut", "cre"), email = "support@wickra.org")
+Description: R bindings for wickra-feature-store over its C ABI hub: describe a
+    feature spec once and fold OHLCV candles into a byte-identical feature
+    matrix - the same protocol as the CLI and every other binding.
+License: MIT + file LICENSE | Apache License 2.0
+URL: https://github.com/wickra-lib/wickra-feature-store
+BugReports: https://github.com/wickra-lib/wickra-feature-store/issues
+Encoding: UTF-8
+NeedsCompilation: yes
+SystemRequirements: the wickra-feature-store C ABI shared library (WKFEATURESTORE_LIB)
+    and its header (WKFEATURESTORE_INC).
+RoxygenNote: 7.3.2

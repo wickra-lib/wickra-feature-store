@@ -346,6 +346,45 @@ jobs:
       - name: Test the Java binding
         run: mvn -B -f bindings/java test
 
+  r:
+    name: R on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      WKFEATURESTORE_INC: ${{ github.workspace }}/bindings/c/include
+      WKFEATURESTORE_LIB: ${{ github.workspace }}/target/release
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-rust
+      - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+      - name: Build the C ABI library
+        run: cargo build -p wickra-feature-store-c --release
+      - uses: r-lib/actions/setup-r@d3c5be51b12e724e68f33216ca3c148b66d5f0b6 # v2.12.1
+        with:
+          r-version: "release"
+          use-public-rspm: true
+      - name: Install and test the R binding
+        shell: bash
+        # github.workspace is a backslash path on Windows; Makevars(.win) (sh) and
+        # mingw need forward slashes. The Makevars do not bake an rpath, so the
+        # native library must be on the loader path at run time.
+        run: |
+          export WKFEATURESTORE_INC="${WKFEATURESTORE_INC//\\//}"
+          export WKFEATURESTORE_LIB="${WKFEATURESTORE_LIB//\\//}"
+          if command -v cygpath >/dev/null 2>&1; then
+            export PATH="$(cygpath -u "$WKFEATURESTORE_LIB"):$PATH"
+          else
+            export LD_LIBRARY_PATH="$WKFEATURESTORE_LIB:$LD_LIBRARY_PATH"
+            export DYLD_LIBRARY_PATH="$WKFEATURESTORE_LIB:$DYLD_LIBRARY_PATH"
+          fi
+          R CMD INSTALL bindings/r
+          Rscript bindings/r/tests/run_tests.R
+
   coverage:
     name: Coverage
     runs-on: ubuntu-latest

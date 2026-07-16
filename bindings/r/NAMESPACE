@@ -1,0 +1,4 @@
+useDynLib(wickrafeaturestore, .registration = TRUE, .fixes = "C_")
+export(wkfeaturestore_version)
+export(wkfeaturestore_new)
+export(wkfeaturestore_command)
