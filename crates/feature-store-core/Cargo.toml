@@ -9,5 +9,28 @@ repository.workspace = true
 homepage.workspace = true
 description = "Data-driven feature-matrix core for the Wickra Feature Store."
 
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+toml = { workspace = true }
+thiserror = { workspace = true }
+# The only name -> indicator registry in the ecosystem (re-exports Candle and
+# the object-safe EvalIndicator trait too).
+wickra-backtest-core = { workspace = true }
+# Data-parallel per-symbol build (default via the `parallel` feature; the WASM
+# path builds sequentially with the feature off, byte-for-byte identical).
+rayon = { workspace = true, optional = true }
+# Columnar output, native only — never in the WASM build.
+arrow = { workspace = true, optional = true }
+parquet = { workspace = true, optional = true }
+
+[features]
+default = ["parallel"]
+parallel = ["dep:rayon"]
+arrow = ["dep:arrow", "dep:parquet"]
+
+[dev-dependencies]
+proptest = { workspace = true }
+
 [lints]
 workspace = true
