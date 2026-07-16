@@ -8,7 +8,12 @@ spec-and-data corpus and must emit a **byte-identical** `FeatureMatrix` JSON. Do
 ## Layout
 
 - **`data/`** — the deterministic candle universe (`sym-01`…`sym-06`, 48 bars
-  each). Each `<symbol>.csv` is `ts,open,high,low,close,volume`.
+  each). Each `<symbol>.csv` is `ts,open,high,low,close,volume`; the Rust CLI
+  reads this directory directly.
+- **`data.json`** — the same universe as a single JSON dataset
+  (`{"<symbol>": [{"ts":…,"open":…,…}, …]}`). This is what every language
+  binding feeds to `build_batch`; it is generated from `data/` and carries
+  byte-for-byte the same candle values.
 - **`specs/`** — the canonical `FeatureSpec`s (JSON). Each names its universe,
   feature columns, optional label columns, warmup policy, trailing window and
   scaling.
@@ -53,15 +58,21 @@ volume   = fixed per symbol
 
 ## Regenerating (never by hand)
 
-Re-bless every `expected/<name>.json` from the current engine with the CLI:
+Re-bless every `expected/<name>.json` from the current engine with the CLI. The
+`--stdin` path folds `data.json` through the exact same `build()` call as every
+binding's `build_batch`, so the output is byte-identical to what the bindings
+must emit:
 
 ```bash
 cargo build -p wickra-feature-store --release
 for s in momentum_features microstructure triple_barrier scaled streaming; do
-  ./target/release/wickra-feature-store --spec golden/specs/$s.json --data golden/data \
-    > golden/expected/$s.json
+  ./target/release/wickra-feature-store --spec golden/specs/$s.json --stdin \
+    < golden/data.json > golden/expected/$s.json
 done
 ```
+
+`data.json` itself is regenerated from `data/` (same candle values); the CLI's
+`--data golden/data` path over the CSV directory produces the identical matrix.
 
 The `golden.rs` conformance test re-runs the same corpus through
 `feature-store-core` and asserts each `expected/<name>.json` byte-for-byte, so a
