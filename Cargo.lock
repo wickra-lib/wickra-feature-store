@@ -1542,6 +1542,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "wickra-feature-store-c"
+version = "0.1.0"
+dependencies = [
+ "feature-store-core",
+]
+
+[[package]]
 name = "windows-core"
 version = "0.62.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
