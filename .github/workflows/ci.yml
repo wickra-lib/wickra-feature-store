@@ -38,8 +38,10 @@ jobs:
           persist-credentials: false
       - uses: ./.github/actions/setup-rust
       - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
-      - run: cargo build --workspace ${{ matrix.features }} --exclude wickra-feature-store-c
-      - run: cargo test --workspace ${{ matrix.features }} --exclude wickra-feature-store-c
+      # The PyO3 extension cdylib is built and tested by the `python` job via
+      # maturin; the C ABI cdylib by the `c-abi` job. Exclude both here.
+      - run: cargo build --workspace ${{ matrix.features }} --exclude wickra-feature-store-c --exclude wickra-feature-store-python
+      - run: cargo test --workspace ${{ matrix.features }} --exclude wickra-feature-store-c --exclude wickra-feature-store-python
 
   lint:
     name: Format & Clippy
@@ -69,8 +71,9 @@ jobs:
       - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
       # Default features only: `arrow`/`parquet` are native-optional columnar
       # output whose own MSRV rolls ahead of ours and is not part of the 1.86
-      # guarantee. The parallel and WASM-sequential paths are what MSRV covers.
-      - run: cargo build --workspace
+      # guarantee. The Python binding needs maturin's platform link flags and is
+      # built by the `python` job. The core, CLI and C ABI stay at 1.86.
+      - run: cargo build --workspace --exclude wickra-feature-store-python
 
   supply-chain:
     name: cargo-deny
@@ -138,6 +141,29 @@ jobs:
           cd bindings/c
           cbindgen --config cbindgen.toml --crate wickra-feature-store-c --output /tmp/wickra_feature_store.h
           diff -u include/wickra_feature_store.h /tmp/wickra_feature_store.h
+
+  python:
+    name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.9", "3.11", "3.12", "3.13"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: ./.github/actions/setup-rust
+      - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+      - run: pip install maturin pytest
+      - run: maturin build --out dist
+        working-directory: bindings/python
+      - run: pip install --no-index --find-links bindings/python/dist wickra-feature-store
+      - run: pytest bindings/python/tests -q
 
   coverage:
     name: Coverage
