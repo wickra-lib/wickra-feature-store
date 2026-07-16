@@ -6,23 +6,42 @@
 //! label columns, and the result is materialized as a [`matrix::FeatureMatrix`]
 //! — deterministic across languages, batch/streaming, and parallel/sequential.
 //!
-//! The data model (spec, features, labels, matrix, scaling) lands first in
-//! P-FS-1; the indicator fold, the parallel symbol build and the JSON-over-C-ABI
-//! `command_json` boundary build on top of it.
+//! The [`FeatureStore`] handle drives everything through one JSON-over-C-ABI
+//! entry point, [`FeatureStore::command_json`]; the free [`build`] function is
+//! the batch entry. Arrow/Parquet output is native only, behind the `arrow`
+//! feature.
 
+pub mod build;
+pub mod config;
 pub mod error;
 pub mod feature;
+pub mod feature_store;
+pub mod indicator_set;
 pub mod label;
 pub mod matrix;
 pub mod scaling;
 pub mod spec;
+pub mod symbol_state;
+pub mod universe;
 
+#[cfg(feature = "arrow")]
+pub mod arrow_out;
+
+pub use build::build;
+pub use config::Config;
 pub use error::{Error, Result};
 pub use feature::{Feature, PriceField};
+pub use feature_store::FeatureStore;
+pub use indicator_set::IndicatorSet;
 pub use label::{forward_return, triple_barrier, Label};
 pub use matrix::{round_to, FeatureMatrix, RowId};
 pub use scaling::apply_scaling;
 pub use spec::{FeatureSpec, OutputFormat, Scaling, WarmupPolicy};
+pub use symbol_state::SymbolState;
+pub use universe::Universe;
+
+/// The candle input type, re-exported from the shared engine.
+pub use wickra_backtest_core::Candle;
 
 /// The crate version, as declared in `Cargo.toml`.
 #[must_use]
