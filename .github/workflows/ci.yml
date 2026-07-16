@@ -322,6 +322,30 @@ jobs:
       - name: Test the C# binding
         run: dotnet test bindings/csharp/WickraFeatureStore.Tests/WickraFeatureStore.Tests.csproj -c Release
 
+  java:
+    name: Java on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-rust
+      - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+      # The pom points native.lib.dir at target/debug, so build the debug profile.
+      - name: Build the C ABI library
+        run: cargo build -p wickra-feature-store-c
+      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520 # v5.4.0
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+      - name: Test the Java binding
+        run: mvn -B -f bindings/java test
+
   coverage:
     name: Coverage
     runs-on: ubuntu-latest
