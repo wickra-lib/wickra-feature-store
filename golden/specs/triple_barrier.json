@@ -1,0 +1,11 @@
+{
+  "universe": ["sym-01", "sym-02", "sym-03", "sym-04", "sym-05", "sym-06"],
+  "timeframe": "1h",
+  "features": [
+    { "kind": "indicator", "name": "Sma", "params": [5] },
+    { "kind": "price", "field": "close" }
+  ],
+  "labels": [
+    { "kind": "triple_barrier", "horizon": 10, "up": 0.02, "down": 0.02 }
+  ]
+}

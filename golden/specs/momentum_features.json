@@ -1,0 +1,14 @@
+{
+  "universe": ["sym-01", "sym-02", "sym-03", "sym-04", "sym-05", "sym-06"],
+  "timeframe": "1h",
+  "features": [
+    { "kind": "indicator", "name": "Sma", "params": [10] },
+    { "kind": "indicator", "name": "Ema", "params": [10] },
+    { "kind": "indicator", "name": "Rsi", "params": [14] },
+    { "kind": "indicator", "name": "Macd", "params": [12, 26, 9], "field": "hist" },
+    { "kind": "price", "field": "close" }
+  ],
+  "labels": [
+    { "kind": "forward_return", "horizon": 5 }
+  ]
+}
