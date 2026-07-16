@@ -86,7 +86,7 @@ updates:
   # C# binding (NuGet). The published wrapper is a thin C-ABI wrapper with no
   # external packages; the test project pulls xunit and Microsoft.NET.Test.Sdk.
   - package-ecosystem: nuget
-    directory: "/bindings/csharp/WickraFeature-Store.Tests"
+    directory: "/bindings/csharp/WickraFeatureStore.Tests"
     schedule:
       interval: weekly
     open-pull-requests-limit: 10

@@ -1,12 +1,11 @@
 # Security Policy
 
-`wickra-feature-store` is analysis software: it evaluates data-driven conditions over
-market data and places no orders. It holds no order-secret material and opens no
-authenticated connections on its default path (the optional `live` universe
-feature only reads public data). The attack surface is therefore narrow —
-principally the parsing of untrusted `ScanSpec` / universe data as it crosses the
-C ABI and WASM boundary. See [THREAT_MODEL.md](THREAT_MODEL.md) for the asset
-inventory and trust boundaries.
+`wickra-feature-store` is analysis software: it builds data-driven feature
+matrices from market data and places no orders. It holds no secret material and
+opens no network connections — it reads only the candle data the caller hands it.
+The attack surface is therefore narrow — principally the parsing of untrusted
+`FeatureSpec` / universe data as it crosses the C ABI and WASM boundary. See
+[THREAT_MODEL.md](THREAT_MODEL.md) for the asset inventory and trust boundaries.
 
 ## Supported versions
 
@@ -35,9 +34,9 @@ reporters who wish to be named once a fix ships.
 ## Scope
 
 In scope: memory-safety or panic-across-FFI flaws in the C ABI hub and its
-buffer protocol, denial-of-service through a hostile `ScanSpec` or dataset (for
+buffer protocol, denial-of-service through a hostile `FeatureSpec` or dataset (for
 example unbounded allocation while parsing), and any input that makes a binding
-return a corrupted or non-deterministic report. Out of scope: incorrect indicator
+return a corrupted or non-deterministic matrix. Out of scope: incorrect indicator
 mathematics (a functional bug, not a vulnerability) and advisories in third-party
 crates that are already tracked and triaged.
 

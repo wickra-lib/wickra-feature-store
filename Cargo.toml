@@ -34,14 +34,10 @@ categories = ["finance", "command-line-utilities"]
 # The workspace's own crates. A `version` is pinned alongside `path` so internal
 # edges are not wildcards (cargo-deny's `bans.wildcards = deny`).
 feature-store-core = { version = "0.1.0", path = "crates/feature-store-core", default-features = false }
-# Wickra ecosystem. wickra-core and wickra-data ship on crates.io; the exchange
-# facade is consumed from git until its first crates.io release (its tag is
-# USER-GO gated) and is used only by the optional `live` universe feature. A
-# `version` is pinned alongside `git` so the dependency is not a wildcard
-# (cargo-deny's `bans.wildcards = deny`).
+# Wickra ecosystem. wickra-core and wickra-data ship on crates.io; the feature
+# store reads local candle data only and never opens a network connection.
 wickra-core = "0.9"
 wickra-data = "0.9"
-wickra-exchange = { git = "https://github.com/wickra-lib/wickra-exchange", version = "0.1" }
 # The only name -> indicator registry in the ecosystem: the backtester's factory
 # resolves any of the 514 indicators by name + params into an object-safe
 # indicator. Consumed from git until its first crates.io release; a `version` is

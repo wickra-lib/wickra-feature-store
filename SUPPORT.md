@@ -14,8 +14,8 @@ Thanks for using `wickra-feature-store`. Here is where to go for help.
 
 Open a [GitHub issue](https://github.com/wickra-lib/wickra-feature-store/issues) using
 the bug-report or feature-request template. Please include the version, the
-binding/language you used, a minimal `ScanSpec` and a small sample universe, and
-the expected vs actual report.
+binding/language you used, a minimal `FeatureSpec` and a small sample universe, and
+the expected vs actual matrix.
 
 ## Security
 
