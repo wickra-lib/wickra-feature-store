@@ -25,6 +25,11 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
         features: ["--all-features", "--no-default-features"]
     runs-on: ${{ matrix.os }}
+    # The CLI binary (wickra-feature-store) and the C ABI cdylib
+    # (wickra_feature_store) share a stem on Windows, so building both in one
+    # --workspace pass can race on the same .pdb and trip LNK1201. Dropping debug
+    # info removes the collision and keeps runner disk use down; the C ABI crate
+    # is built and tested on its own in the `c-abi` job.
     env:
       RUSTFLAGS: "-C debuginfo=0"
     steps:
@@ -33,8 +38,8 @@ jobs:
           persist-credentials: false
       - uses: ./.github/actions/setup-rust
       - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
-      - run: cargo build --workspace ${{ matrix.features }}
-      - run: cargo test --workspace ${{ matrix.features }}
+      - run: cargo build --workspace ${{ matrix.features }} --exclude wickra-feature-store-c
+      - run: cargo test --workspace ${{ matrix.features }} --exclude wickra-feature-store-c
 
   lint:
     name: Format & Clippy
@@ -102,6 +107,37 @@ jobs:
           ./target/debug/wickra-feature-store --spec smoke/spec.json --data smoke/data --format parquet --out smoke/out.parquet
           test -s smoke/out.parquet
           head -c 4 smoke/out.parquet | grep -q PAR1
+
+  c-abi:
+    name: C ABI on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-rust
+      - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+      - name: Install cbindgen
+        uses: taiki-e/install-action@bffeee26d4db9be238a4ea78d8826604ebcb594d # v2.82.5
+        with:
+          tool: cbindgen
+      - name: Build the C ABI library (cdylib + staticlib)
+        run: cargo build -p wickra-feature-store-c --release
+      - name: Rust unit tests
+        run: cargo test -p wickra-feature-store-c
+      # The generated header is platform-independent, so checking drift on one OS
+      # is enough — and avoids a spurious CRLF/LF diff on the Windows runner.
+      - name: Check the generated C header is in sync
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          cd bindings/c
+          cbindgen --config cbindgen.toml --crate wickra-feature-store-c --output /tmp/wickra_feature_store.h
+          diff -u include/wickra_feature_store.h /tmp/wickra_feature_store.h
 
   coverage:
     name: Coverage
