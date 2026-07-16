@@ -1,0 +1,24 @@
+{
+  "name": "wickra-feature-store-linux-arm64-gnu",
+  "version": "0.1.0",
+  "description": "Native binding for wickra-feature-store (Linux arm64 GNU). Installed automatically as an optional dependency of wickra-feature-store on matching platforms.",
+  "main": "wickra-feature-store.linux-arm64-gnu.node",
+  "files": [
+    "wickra-feature-store.linux-arm64-gnu.node"
+  ],
+  "license": "MIT OR Apache-2.0",
+  "engines": {
+    "node": ">= 22"
+  },
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wickra-lib/wickra-feature-store"
+  },
+  "homepage": "https://github.com/wickra-lib/wickra-feature-store"
+}
