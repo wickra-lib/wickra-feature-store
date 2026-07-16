@@ -1,0 +1,47 @@
+[package]
+name = "wickra-feature-store-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+serde_json = "1"
+# The core under test. Default features off so the fuzzers exercise the
+# sequential build path (no rayon); the registry is pulled in transitively.
+feature-store-core = { path = "../crates/feature-store-core", default-features = false }
+
+# Detach from the parent workspace — cargo-fuzz builds this crate on its own with
+# sanitizer flags on a nightly toolchain.
+[workspace]
+
+[[bin]]
+name = "spec_parse"
+path = "fuzz_targets/spec_parse.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "feature_eval"
+path = "fuzz_targets/feature_eval.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "build_matrix"
+path = "fuzz_targets/build_matrix.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "label_compute"
+path = "fuzz_targets/label_compute.rs"
+test = false
+doc = false
+bench = false
