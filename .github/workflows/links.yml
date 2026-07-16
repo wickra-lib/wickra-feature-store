@@ -24,5 +24,5 @@ jobs:
           persist-credentials: false
       - uses: lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411 # v2
         with:
-          args: --config lychee.toml --no-progress --root-dir "${{ github.workspace }}" "*.md"
+          args: --config lychee.toml --no-progress --root-dir "${{ github.workspace }}" "*.md" "examples/README.md" "bindings/*/README.md"
           fail: true

@@ -1967,6 +1967,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "wickra-feature-store-example"
+version = "0.1.0"
+dependencies = [
+ "feature-store-core",
+ "serde_json",
+]
+
+[[package]]
 name = "wickra-feature-store-node"
 version = "0.1.0"
 dependencies = [

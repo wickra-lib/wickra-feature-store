@@ -157,6 +157,11 @@ jobs:
           cd bindings/c
           cbindgen --config cbindgen.toml --crate wickra-feature-store-c --output /tmp/wickra_feature_store.h
           diff -u include/wickra_feature_store.h /tmp/wickra_feature_store.h
+      - name: Build and run the C / C++ example (CMake + ctest)
+        run: |
+          cmake -S examples/c -B examples/c/build
+          cmake --build examples/c/build --config Release
+          ctest --test-dir examples/c/build -C Release --output-on-failure
 
   python:
     name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
