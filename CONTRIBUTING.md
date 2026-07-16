@@ -6,16 +6,16 @@ open an issue first so we can agree on the approach.
 
 ## Orientation
 
-- The core — the `ScanSpec` condition tree, the per-symbol `SymbolState` fold,
-  the `Universe`, condition evaluation and `scan_batch` — lives in
-  `crates/feature-store-core`. Conditions are **data, not code**: a serde tree, so the
-  same screen crosses the C ABI and WASM unchanged.
+- The core — the `FeatureSpec`, the per-symbol `SymbolState` fold, the
+  `FeatureMatrix` and the `build` / `build_batch` entry points — lives in
+  `crates/feature-store-core`. The spec is **data, not code**: a serde struct, so
+  the same feature build crosses the C ABI and WASM unchanged.
 - The reference consumer is `crates/feature-store-cli` (the `wickra-feature-store` binary).
 - Every language binding lives under `bindings/<lang>/` and exposes the same
-  data-driven surface: a `Feature-Store` handle plus `command(json) -> json` and
+  data-driven surface: a `FeatureStore` handle plus `command(json) -> json` and
   `version`. Bindings must preserve the **golden-parity invariant**: given the
   spec + universe in `golden/{specs,data}/`, the same command produces the
-  byte-identical report in `golden/expected/`.
+  byte-identical matrix in `golden/expected/`.
 
 ## The dev loop
 
@@ -31,8 +31,8 @@ cargo deny check
 
 `cargo fmt --all` and the `clippy -D warnings` gate are enforced in CI on three
 operating systems, across both the default (rayon `parallel`) and
-`--no-default-features` (sequential / WASM) feature sets — a scan must produce a
-byte-identical report either way.
+`--no-default-features` (sequential / WASM) feature sets — a build must produce a
+byte-identical matrix either way.
 
 ## Conventions
 
@@ -41,21 +41,21 @@ byte-identical report either way.
   do not push to `main` directly.
 - **All public artifacts are in English** — code, comments, commit messages, PR
   titles and bodies, issues and docs.
-- **No secrets, ever** — not in code, tests, fixtures, logs, issues or PRs. Any
-  live-universe path is opt-in behind the `live` feature and never uses real
-  keys in tests.
+- **No secrets, ever** — not in code, tests, fixtures, logs, issues or PRs. The
+  feature store reads only local candle data and never uses real keys in tests.
 - **Production code only** — no mocks outside `#[cfg(test)]`, no TODO stubs, and
   no defensive branches that can never run (they fail coverage).
 
-## Adding a condition or a metric
+## Adding a feature or a label
 
-Conditions are a serde enum, so extending the screen means adding a variant, not
-a closure. A new comparator, cross-section metric or breadth condition is added
-to `crates/feature-store-core/src/spec.rs` and handled in `src/eval.rs`, with a serde
-round-trip test and a golden fixture. Indicators themselves come from the
+The spec is a serde struct, so extending it means adding a variant, not a
+closure. A new feature kind (`indicator` / `price` / `microstructure`) or label
+kind (`forward_return` / `triple_barrier`) is added to
+`crates/feature-store-core/src/spec.rs` and handled in the per-symbol fold, with
+a serde round-trip test and a golden fixture. Indicators themselves come from the
 [Wickra](https://github.com/wickra-lib/wickra) core registry by name and
-parameters — no indicator code lives here. See `docs/CONDITIONS.md` and
-`docs/INDICATORS.md`.
+parameters — no indicator code lives here. See
+[docs/FEATURES.md](docs/FEATURES.md) and [docs/LABELS.md](docs/LABELS.md).
 
 ## Developer Certificate of Origin
 

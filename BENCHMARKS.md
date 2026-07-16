@@ -1,19 +1,19 @@
 # Benchmarks
 
-A feature-store's cost is dominated by folding every symbol's history through its
-indicators and evaluating the condition tree at each bar. The benchmarks here
-measure that **core scan work**, so throughput scales predictably with the
-universe size and the number of indicators a spec references.
+A feature store's cost is dominated by folding every symbol's history through its
+indicators and computing the label cells at each bar. The benchmarks here measure
+that **core build work**, so throughput scales predictably with the universe size
+and the number of features a spec references.
 
 ## What is measured
 
-The `feature-store-bench` crate (criterion) covers `scan_batch` across a matrix of:
+The `feature-store-bench` crate (criterion) covers two groups:
 
-- **Universe size** — 100, 1 000 and 10 000 symbols.
-- **Indicator count** — specs referencing roughly 5 and 20 indicators.
-- **Execution path** — the default rayon `parallel` feature vs
-  `--no-default-features` (the sequential / WASM path), which must produce a
-  byte-identical report.
+- **`build`** — the batch `build(data, spec)` entry point, across a matrix of
+  universe size (100 and 1 000 symbols, each carrying 200 bars), feature count
+  (5 and 20 indicators), and whether a `forward_return` label is attached.
+- **`serialize`** — `FeatureMatrix::to_json` for a 200-symbol, 10-feature,
+  1-label matrix, isolating the serialisation cost from the fold.
 
 ## Methodology
 
@@ -26,28 +26,32 @@ cargo bench -p feature-store-bench
 
 ## Results
 
-Measured with `cargo bench -p feature-store-bench` (criterion) on a Windows x86-64
-laptop, default `parallel` (rayon) path. Figures are the median estimate; treat
-them as orders of magnitude, not guarantees — they vary with CPU core count and
-toolchain.
+Median estimates from `cargo bench -p feature-store-bench` on a Windows x86-64
+laptop, default `parallel` (rayon) path, with a shortened criterion sampling
+window (`--warm-up-time 1 --measurement-time 2`). Treat them as orders of
+magnitude, not guarantees — they vary with CPU core count and toolchain.
 
-| Benchmark | Universe × indicators | Median | Throughput |
-|-----------|-----------------------|--------|------------|
-| `scan_batch/100sym_5ind`     | 100 × ~5    | 1.34 ms | ~75 K sym/s |
-| `scan_batch/100sym_20ind`    | 100 × ~20   | 5.32 ms | ~19 K sym/s |
-| `scan_batch/1000sym_5ind`    | 1 000 × ~5  | 12.7 ms | ~79 K sym/s |
-| `scan_batch/1000sym_20ind`   | 1 000 × ~20 | 51.3 ms | ~20 K sym/s |
-| `scan_batch/10000sym_5ind`   | 10 000 × ~5 | 126 ms  | ~80 K sym/s |
-| `scan_batch/10000sym_20ind`  | 10 000 × ~20 | 513 ms | ~19 K sym/s |
+| Benchmark | Universe × features | Bars folded | Median |
+|-----------|---------------------|-------------|--------|
+| `build/100sym_5feat_0lab`    | 100 × 5              | 20 000  | 9.9 ms  |
+| `build/100sym_5feat_1lab`    | 100 × 5 + label      | 20 000  | 13.0 ms |
+| `build/100sym_20feat_0lab`   | 100 × 20             | 20 000  | 37.3 ms |
+| `build/100sym_20feat_1lab`   | 100 × 20 + label     | 20 000  | 38.2 ms |
+| `build/1000sym_5feat_0lab`   | 1 000 × 5            | 200 000 | 99.0 ms |
+| `build/1000sym_5feat_1lab`   | 1 000 × 5 + label    | 200 000 | 126.5 ms |
+| `build/1000sym_20feat_0lab`  | 1 000 × 20           | 200 000 | 322 ms  |
+| `build/1000sym_20feat_1lab`  | 1 000 × 20 + label   | 200 000 | 290 ms  |
+| `serialize/to_json`          | 200 × 10 + label     | —       | 118 ms  |
 
-The takeaway: per-symbol throughput stays roughly constant as the universe grows
-(~80 K symbols/s at 5 indicators, ~19 K at 20), so scan cost scales linearly with
-universe size and with the number of distinct indicators a spec references — a
-1 000-symbol, 5-indicator screen finishes in ~13 ms. The nightly `bench.yml`
-workflow reruns this on a clean Linux runner for tracking over time.
+The takeaway: per-symbol cost stays roughly constant as the universe grows
+(~99 µs/symbol at 5 features, ~330 µs/symbol at 20), so build time scales linearly
+with universe size and with the number of distinct indicators a spec references — a
+1 000-symbol, 5-feature build finishes in ~100 ms. Adding a `forward_return` label
+is a small, near-constant overhead. The nightly `bench.yml` workflow reruns the
+full criterion sampling on a clean Linux runner for tracking over time.
 
 ## Caveats
 
-These figures bound the feature-store's own scan overhead only. End-to-end time in a
-real run also depends on loading the universe from disk or a live feed, which
+These figures bound the feature store's own build overhead only. End-to-end time
+in a real run also depends on loading the universe from disk or a live feed, which
 these in-process benchmarks do not capture.

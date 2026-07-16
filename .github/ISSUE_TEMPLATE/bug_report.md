@@ -9,8 +9,8 @@ labels: bug
 A clear description of what is wrong.
 
 **Reproduction**
-The smallest input that reproduces the problem — a `ScanSpec` and a small sample
-universe, or the exact `command` JSON.
+The smallest input that reproduces the problem — a `FeatureSpec` and a small
+sample universe, or the exact `command` JSON.
 
 ```
 # paste a minimal repro here (spec + a few candles / a command JSON)
@@ -23,7 +23,7 @@ universe, or the exact `command` JSON.
 **Environment**
 - `wickra-feature-store` version:
 - Language / binding (Rust, Python, Node.js, WASM, C, C++, C#, Go, Java, R):
-- Mode (batch `scan_batch` / streaming):
+- Mode (batch `build` / streaming):
 - OS:
 
 **Additional context**

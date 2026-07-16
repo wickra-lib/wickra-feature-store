@@ -53,6 +53,6 @@ bindings/r/..Rcheck/
 *.key
 secrets/
 
-# Feature-Store output artifacts.
+# Feature store output artifacts.
 *.parquet
 *.arrow
