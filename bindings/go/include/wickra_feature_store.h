@@ -22,6 +22,13 @@
 // An opaque handle to a feature-store instance. Created by
 // [`wickra_feature_store_new`] and destroyed by [`wickra_feature_store_free`];
 // never dereferenced by the caller.
+//
+// The handle caches the most recent command's response in `pending` so the
+// classic two-call length protocol (measure with `out = NULL`, then write) does
+// not execute the command twice. That matters because feature-store commands are
+// *stateful* — `push`, `set_spec` and `reset` mutate the store — so a naive
+// double execution would apply the mutation twice. The cache is keyed on the raw
+// command bytes and cleared once the response has been delivered.
 typedef struct WickraFeatureStore WickraFeatureStore;
 
 #ifdef __cplusplus
