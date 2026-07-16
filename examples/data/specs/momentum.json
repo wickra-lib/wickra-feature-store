@@ -1,0 +1,8 @@
+{
+  "universe": ["AAA", "BBB"],
+  "features": [
+    { "kind": "indicator", "name": "Sma", "params": [2] },
+    { "kind": "price", "field": "close" }
+  ],
+  "labels": [{ "kind": "forward_return", "horizon": 1 }]
+}
