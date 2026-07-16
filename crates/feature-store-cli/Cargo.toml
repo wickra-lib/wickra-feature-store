@@ -1,0 +1,41 @@
+[package]
+name = "wickra-feature-store"
+description = "Reference command-line feature store over feature-store-core: fold a FeatureSpec over per-symbol CSV candle files and emit the feature matrix as JSON, CSV, Arrow or Parquet."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "wickra-feature-store"
+path = "src/main.rs"
+
+[features]
+# Columnar output (Arrow IPC + Parquet) is native only and pulls the arrow/parquet
+# stack, whose MSRV rolls ahead of the workspace 1.86 guarantee — so it is opt-in,
+# exactly as in feature-store-core. Build the released binary with `--features arrow`;
+# the default binary emits JSON/CSV. `--all-features` turns everything on in CI.
+default = []
+arrow = ["dep:arrow", "feature-store-core/arrow"]
+
+[dependencies]
+# The data-driven feature-matrix core. Default features are off so the workspace
+# `--no-default-features` job still exercises the core's sequential path through
+# this edge; the native build turns `parallel`/`arrow` back on via `--all-features`
+# / `--features arrow`.
+feature-store-core = { path = "../feature-store-core", default-features = false }
+serde = { workspace = true }
+serde_json.workspace = true
+clap.workspace = true
+# Arrow IPC file writer (Parquet is written through the core). Feature-gated,
+# native only.
+arrow = { workspace = true, optional = true }

@@ -1,8 +1,8 @@
 name: CI
 
-# Core-scoped CI. The feature-store core is the only crate in the workspace so
-# far; the CLI, C ABI and the ten language bindings each add their own job to
-# this file as they land (P-FS-2, P-FS-3). Every job here must stay green.
+# Workspace CI. The feature-store core and the reference CLI make up the
+# workspace so far; the C ABI and the ten language bindings each add their own
+# job to this file as they land (P-FS-3). Every job here must stay green.
 
 on:
   push:
@@ -78,6 +78,30 @@ jobs:
         with:
           tool: cargo-deny
       - run: cargo deny check
+
+  cli:
+    name: CLI smoke (JSON + Parquet)
+    runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: "-C debuginfo=0"
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup-rust
+      - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+      # The columnar (`arrow`) output is opt-in; build the binary the released
+      # binary ships as, then exercise both the text and the columnar paths.
+      - run: cargo build -p wickra-feature-store --features arrow
+      - name: Run end-to-end
+        run: |
+          mkdir -p smoke/data
+          printf 'ts,open,high,low,close,volume\n1,100,101,99,100,10\n2,100,102,99,101,11\n3,101,103,100,102,12\n' > smoke/data/AAA.csv
+          printf '%s' '{ "universe": ["AAA"], "features": [ {"kind":"indicator","name":"Sma","params":[2]}, {"kind":"price","field":"close"} ], "labels": [ {"kind":"forward_return","horizon":1} ] }' > smoke/spec.json
+          ./target/debug/wickra-feature-store --spec smoke/spec.json --data smoke/data --format json
+          ./target/debug/wickra-feature-store --spec smoke/spec.json --data smoke/data --format parquet --out smoke/out.parquet
+          test -s smoke/out.parquet
+          head -c 4 smoke/out.parquet | grep -q PAR1
 
   coverage:
     name: Coverage
