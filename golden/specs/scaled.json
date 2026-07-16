@@ -1,0 +1,10 @@
+{
+  "universe": ["sym-01", "sym-02", "sym-03", "sym-04", "sym-05", "sym-06"],
+  "timeframe": "1h",
+  "features": [
+    { "kind": "indicator", "name": "Sma", "params": [10] },
+    { "kind": "indicator", "name": "Ema", "params": [20] },
+    { "kind": "indicator", "name": "Rsi", "params": [14] }
+  ],
+  "scaling": "z_score"
+}
