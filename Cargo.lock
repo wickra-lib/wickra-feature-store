@@ -1929,7 +1929,7 @@ dependencies = [
 [[package]]
 name = "wickra-backtest-core"
 version = "0.1.0"
-source = "git+https://github.com/wickra-lib/wickra-backtest#7bd8897c7fa95f2a05f93f1e13c4dbad39ddd278"
+source = "git+https://github.com/wickra-lib/wickra-backtest#bef35acfefb0c1170812cc27bca58df6d548cff8"
 dependencies = [
  "schemars",
  "serde",
