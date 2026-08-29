@@ -28,7 +28,7 @@
 
 **Turn OHLCV and microstructure event streams into ML-ready feature matrices over 514 O(1) streaming indicators — deterministic across ten languages.**
 
-> **Part of the [Wickra ecosystem](https://github.com/wickra-lib):** the same data-driven core and ten-language binding surface also power [wickra-backtest](https://github.com/wickra-lib/wickra-backtest), [wickra-screener](https://github.com/wickra-lib/wickra-screener), [wickra-strategy-ci](https://github.com/wickra-lib/wickra-strategy-ci) and [wickra-gym](https://github.com/wickra-lib/wickra-gym).
+> **Part of the [Wickra ecosystem](https://github.com/wickra-lib):** the same data-driven core and ten-language binding surface also power [wickra-exchange](https://github.com/wickra-lib/wickra-exchange), [wickra-backtest](https://github.com/wickra-lib/wickra-backtest), [wickra-terminal](https://github.com/wickra-lib/wickra-terminal) and 20 more — see [the full list](https://github.com/wickra-lib).
 
 Wickra Feature Store is one data-driven core, `feature-store-core`: a serde
 **`FeatureSpec`** is folded over each symbol's history with the
