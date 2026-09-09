@@ -5,7 +5,7 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
 
-use feature_store_core::{Candle, FeatureSpec};
+use feature_store_core::{Candle, FeatureSpec, SymbolInput};
 
 /// The repo-root `golden/` directory, resolved from this crate's manifest dir.
 #[must_use]
@@ -42,9 +42,10 @@ pub fn load_specs() -> Vec<(String, FeatureSpec)> {
         .collect()
 }
 
-/// Load every `golden/data/<symbol>.csv` into a symbol-keyed candle map.
+/// Load every `golden/data/<symbol>.csv` into a symbol-keyed input map. The
+/// golden universe is candle-only; the fed corpus lives in `golden/feeds`.
 #[must_use]
-pub fn load_data() -> BTreeMap<String, Vec<Candle>> {
+pub fn load_data() -> BTreeMap<String, SymbolInput> {
     let dir = golden_dir().join("data");
     let mut data = BTreeMap::new();
     for entry in fs::read_dir(&dir).expect("read golden/data") {
@@ -58,7 +59,7 @@ pub fn load_data() -> BTreeMap<String, Vec<Candle>> {
             .expect("csv stem")
             .to_string();
         let content = fs::read_to_string(&path).expect("read csv");
-        data.insert(symbol, parse_csv(&content));
+        data.insert(symbol, parse_csv(&content).into());
     }
     data
 }

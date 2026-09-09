@@ -6,7 +6,7 @@
 use std::collections::BTreeMap;
 
 use feature_store_core::{
-    build, Candle, Feature, FeatureSpec, Label, PriceField, Scaling, WarmupPolicy,
+    build, Candle, Feature, FeatureSpec, Label, PriceField, Scaling, SymbolInput, WarmupPolicy,
 };
 use proptest::prelude::*;
 
@@ -27,12 +27,12 @@ fn candles_strategy() -> impl Strategy<Value = Vec<Candle>> {
     })
 }
 
-fn universe_strategy() -> impl Strategy<Value = BTreeMap<String, Vec<Candle>>> {
+fn universe_strategy() -> impl Strategy<Value = BTreeMap<String, SymbolInput>> {
     prop::collection::vec(candles_strategy(), 1..4).prop_map(|per_symbol| {
         per_symbol
             .into_iter()
             .enumerate()
-            .map(|(i, candles)| (format!("SYM{i:02}"), candles))
+            .map(|(i, candles)| (format!("SYM{i:02}"), candles.into()))
             .collect()
     })
 }

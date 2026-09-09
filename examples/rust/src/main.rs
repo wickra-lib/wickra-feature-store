@@ -41,8 +41,8 @@ fn main() {
     let spec: FeatureSpec = FeatureSpec::from_json(SPEC).expect("valid spec");
 
     let mut data = BTreeMap::new();
-    data.insert("AAA".to_string(), series(&[10.0, 11.0, 12.0]));
-    data.insert("BBB".to_string(), series(&[20.0, 22.0, 24.0]));
+    data.insert("AAA".to_string(), series(&[10.0, 11.0, 12.0]).into());
+    data.insert("BBB".to_string(), series(&[20.0, 22.0, 24.0]).into());
 
     let matrix = build(&data, &spec).expect("build feature matrix");
 

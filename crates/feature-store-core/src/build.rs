@@ -8,6 +8,7 @@
 //! scaling pass never depend on thread scheduling.
 
 use crate::error::Result;
+use crate::feeds::{CoreSeries, SymbolInput, SymbolSeries};
 use crate::indicator_set::IndicatorSet;
 use crate::label::{forward_return, triple_barrier, Label};
 use crate::matrix::{FeatureMatrix, RowId};
@@ -15,7 +16,6 @@ use crate::scaling::apply_scaling;
 use crate::spec::{FeatureSpec, WarmupPolicy};
 use crate::symbol_state::SymbolState;
 use std::collections::BTreeMap;
-use wickra_backtest_core::Candle;
 
 /// One symbol's emitted rows: `(row identity, cells)` in bar order.
 type SymbolRows = Vec<(RowId, Vec<f64>)>;
@@ -25,29 +25,64 @@ type SymbolRows = Vec<(RowId, Vec<f64>)>;
 /// Columns are `spec.features` (in order) followed by `spec.labels`. Rows are
 /// emitted per symbol in sorted order, ascending by bar within each symbol.
 ///
+/// Each value is a [`SymbolInput`]: a bare candle array, or a
+/// [`crate::feeds::SymbolSeries`] carrying the side feeds the pairwise,
+/// derivatives, order-book, trade-flow and breadth indicators read. A spec whose
+/// column needs a feed the input does not carry is refused rather than emitted
+/// as a silently `NaN` column.
+///
 /// # Errors
-/// Returns [`crate::Error::BadSpec`] on an invalid spec and
+/// Returns [`crate::Error::BadSpec`] on an invalid spec,
 /// [`crate::Error::UnknownIndicator`] if a referenced indicator is not in the
-/// registry.
-pub fn build(data: &BTreeMap<String, Vec<Candle>>, spec: &FeatureSpec) -> Result<FeatureMatrix> {
+/// registry, [`crate::Error::MissingFeed`] if a column needs a feed a symbol
+/// does not supply, and [`crate::Error::Data`] on a feed whose length differs
+/// from the candle count.
+pub fn build(data: &BTreeMap<String, SymbolInput>, spec: &FeatureSpec) -> Result<FeatureMatrix> {
+    let series: BTreeMap<String, SymbolSeries> = data
+        .iter()
+        .map(|(symbol, input)| (symbol.clone(), input.to_series()))
+        .collect();
+    build_series(&series, spec)
+}
+
+/// Build a feature matrix from a symbol -> series map, the form the streaming
+/// [`crate::universe::Universe`] accumulates.
+///
+/// This is the single fold entry; [`build`] widens its bare-candle shorthand
+/// onto it.
+///
+/// # Errors
+/// As [`build`].
+pub fn build_series(
+    data: &BTreeMap<String, SymbolSeries>,
+    spec: &FeatureSpec,
+) -> Result<FeatureMatrix> {
     spec.validate()?;
     // Resolve every indicator once so an unknown name fails even with no data.
     let _ = IndicatorSet::from_features(&spec.features)?;
 
-    let entries: Vec<(&String, &Vec<Candle>)> = data.iter().collect();
+    // Convert and length-check every symbol's feeds up front, so a malformed
+    // feed is an error before any folding starts, and check each symbol's spec
+    // feeds against what that symbol actually carries.
+    let mut series: Vec<(&String, CoreSeries)> = Vec::with_capacity(data.len());
+    for (symbol, symbol_series) in data {
+        let core = CoreSeries::build(symbol, symbol_series.clone())?;
+        spec.check_feeds(core.available())?;
+        series.push((symbol, core));
+    }
 
     #[cfg(feature = "parallel")]
     let per_symbol: Vec<Result<SymbolRows>> = {
         use rayon::prelude::*;
-        entries
+        series
             .par_iter()
-            .map(|(symbol, candles)| build_symbol(spec, symbol, candles))
+            .map(|(symbol, core)| build_symbol(spec, symbol, core))
             .collect()
     };
     #[cfg(not(feature = "parallel"))]
-    let per_symbol: Vec<Result<SymbolRows>> = entries
+    let per_symbol: Vec<Result<SymbolRows>> = series
         .iter()
-        .map(|(symbol, candles)| build_symbol(spec, symbol, candles))
+        .map(|(symbol, core)| build_symbol(spec, symbol, core))
         .collect();
 
     let mut matrix = FeatureMatrix::new(spec.columns());
@@ -65,13 +100,14 @@ pub fn build(data: &BTreeMap<String, Vec<Candle>>, spec: &FeatureSpec) -> Result
 
 /// Build one symbol's rows: fold features bar by bar, join labels from the OHLC
 /// arrays, apply the warmup policy and trailing window.
-fn build_symbol(spec: &FeatureSpec, symbol: &str, candles: &[Candle]) -> Result<SymbolRows> {
+fn build_symbol(spec: &FeatureSpec, symbol: &str, series: &CoreSeries) -> Result<SymbolRows> {
+    let candles = &series.candles;
     let m = candles.len();
     let mut state = SymbolState::new(&spec.features)?;
     let mut feature_rows: Vec<Vec<f64>> = Vec::with_capacity(m);
     let mut ready: Vec<bool> = Vec::with_capacity(m);
-    for candle in candles {
-        state.fold(candle);
+    for (i, candle) in candles.iter().enumerate() {
+        state.fold_with(candle, series.bar(i));
         feature_rows.push(state.feature_row());
         ready.push(state.all_ready());
     }
@@ -117,6 +153,7 @@ mod tests {
     use super::*;
     use crate::feature::{Feature, PriceField};
     use crate::spec::Scaling;
+    use wickra_backtest_core::Candle;
 
     fn candle(t: i64, close: f64) -> Candle {
         Candle {
@@ -155,7 +192,7 @@ mod tests {
     fn price_and_forward_return_columns() {
         let mut data = BTreeMap::new();
         let (s, c) = series("AAA", &[100.0, 110.0, 121.0]);
-        data.insert(s, c);
+        data.insert(s, c.into());
         let spec = spec_with(
             vec![Feature::Price {
                 field: PriceField::Close,
@@ -179,7 +216,7 @@ mod tests {
     fn warmup_skip_drops_not_ready_rows() {
         let mut data = BTreeMap::new();
         let (s, c) = series("AAA", &[1.0, 2.0, 3.0, 4.0]);
-        data.insert(s, c);
+        data.insert(s, c.into());
         let mut spec = spec_with(
             vec![Feature::Indicator {
                 name: "Sma".into(),
@@ -198,7 +235,7 @@ mod tests {
     fn window_keeps_trailing_rows() {
         let mut data = BTreeMap::new();
         let (s, c) = series("AAA", &[1.0, 2.0, 3.0, 4.0, 5.0]);
-        data.insert(s, c);
+        data.insert(s, c.into());
         let mut spec = spec_with(
             vec![Feature::Price {
                 field: PriceField::Close,
@@ -216,7 +253,7 @@ mod tests {
     fn symbols_emit_in_sorted_order() {
         let mut data = BTreeMap::new();
         for (s, c) in [series("BBB", &[1.0, 2.0]), series("AAA", &[3.0, 4.0])] {
-            data.insert(s, c);
+            data.insert(s, c.into());
         }
         let spec = spec_with(
             vec![Feature::Price {
@@ -233,7 +270,7 @@ mod tests {
     fn scaling_applies_to_feature_columns_only() {
         let mut data = BTreeMap::new();
         let (s, c) = series("AAA", &[10.0, 20.0, 30.0]);
-        data.insert(s, c);
+        data.insert(s, c.into());
         let mut spec = spec_with(
             vec![Feature::Price {
                 field: PriceField::Close,
@@ -254,7 +291,7 @@ mod tests {
 
     #[test]
     fn unknown_indicator_errors_even_without_data() {
-        let data: BTreeMap<String, Vec<Candle>> = BTreeMap::new();
+        let data: BTreeMap<String, SymbolInput> = BTreeMap::new();
         let spec = spec_with(
             vec![Feature::Indicator {
                 name: "NotReal".into(),

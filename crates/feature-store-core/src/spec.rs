@@ -2,6 +2,8 @@
 
 use crate::error::{Error, Result};
 use crate::feature::Feature;
+use crate::feeds::{Available, FeedKind};
+use crate::indicator_set::feed_kind;
 use crate::label::Label;
 use serde::{Deserialize, Serialize};
 
@@ -107,6 +109,37 @@ impl FeatureSpec {
         }
         if self.window == Some(0) {
             return Err(Error::BadSpec("window must be > 0".into()));
+        }
+        Ok(())
+    }
+
+    /// Reject the columns whose indicator needs a side feed the build does not
+    /// supply.
+    ///
+    /// An indicator whose feed is absent resolves, ticks and returns nothing —
+    /// every bar, without complaint — so the column would be `NaN` for its whole
+    /// length. Refusing the spec turns that into an error naming the indicator
+    /// and the feed. A name the registry does not know is left to
+    /// [`crate::indicator_set::IndicatorSet`], which reports it as unknown.
+    ///
+    /// # Errors
+    /// [`Error::MissingFeed`] for the first column whose feed is absent.
+    pub fn check_feeds(&self, available: Available) -> Result<()> {
+        for feature in &self.features {
+            let name = match feature {
+                Feature::Indicator { name, .. } => name.as_str(),
+                Feature::Microstructure { metric, .. } => metric.as_str(),
+                Feature::Price { .. } => continue,
+            };
+            let Some(kind) = feed_kind(name) else {
+                continue;
+            };
+            if kind != FeedKind::Candle && !available.has(kind) {
+                return Err(Error::MissingFeed {
+                    indicator: name.to_string(),
+                    feed: kind.as_str(),
+                });
+            }
         }
         Ok(())
     }

@@ -17,6 +17,8 @@ thiserror = { workspace = true }
 # The only name -> indicator registry in the ecosystem (re-exports Candle and
 # the object-safe EvalIndicator trait too).
 wickra-backtest-core = { workspace = true }
+# The indicator types the registry's side feeds are expressed in.
+wickra-core = { workspace = true }
 # Data-parallel per-symbol build (default via the `parallel` feature; the WASM
 # path builds sequentially with the feature off, byte-for-byte identical).
 rayon = { workspace = true, optional = true }

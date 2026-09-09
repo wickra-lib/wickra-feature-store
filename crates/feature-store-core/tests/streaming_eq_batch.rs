@@ -25,8 +25,8 @@ fn streaming_matches_batch_for_every_golden_spec() {
             .unwrap_or_else(|e| panic!("read spec {name}: {e}"));
         let mut store = FeatureStore::new(&spec_json)
             .unwrap_or_else(|e| panic!("FeatureStore::new {name}: {e}"));
-        for (symbol, candles) in &data {
-            for candle in candles {
+        for (symbol, input) in &data {
+            for candle in input.candles() {
                 store.push(symbol, candle);
             }
         }
@@ -54,8 +54,8 @@ fn reset_clears_the_streamed_state() {
     .expect("read spec");
 
     let mut store = FeatureStore::new(&spec_json).expect("new");
-    for (symbol, candles) in &data {
-        for candle in candles {
+    for (symbol, input) in &data {
+        for candle in input.candles() {
             store.push(symbol, candle);
         }
     }
@@ -66,8 +66,8 @@ fn reset_clears_the_streamed_state() {
     assert_eq!(empty.rows, 0, "reset must drop all accumulated bars");
 
     // Re-pushing the same data reproduces the pre-reset matrix.
-    for (symbol, candles) in &data {
-        for candle in candles {
+    for (symbol, input) in &data {
+        for candle in input.candles() {
             store.push(symbol, candle);
         }
     }

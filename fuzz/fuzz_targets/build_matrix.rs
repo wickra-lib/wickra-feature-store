@@ -46,7 +46,7 @@ fuzz_target!(|data: &[u8]| {
     }
 
     let spec = FeatureSpec::from_json(SPEC).expect("fixed spec parses");
-    let data = BTreeMap::from([("AAA".to_string(), candles)]);
+    let data = BTreeMap::from([("AAA".to_string(), candles.into())]);
     let matrix = build(&data, &spec).expect("known indicators build cleanly");
 
     let ncols = spec.features.len() + spec.labels.len();

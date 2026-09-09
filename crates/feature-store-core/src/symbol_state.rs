@@ -7,6 +7,7 @@
 //! [`crate::build::build`] re-folds a fresh `SymbolState` per symbol.
 
 use crate::feature::{Feature, PriceField};
+use crate::feeds::BarFeeds;
 use crate::indicator_set::{registry_key, IndicatorSet};
 use crate::Result;
 use wickra_backtest_core::Candle;
@@ -35,10 +36,16 @@ impl SymbolState {
         })
     }
 
-    /// Fold one candle in O(1) per indicator: tick the set and recompute the
-    /// current feature row.
+    /// Fold one candle with no side feeds — the shorthand for a candle-only
+    /// spec, equivalent to [`SymbolState::fold_with`] with empty feeds.
     pub fn fold(&mut self, candle: &Candle) {
-        self.inds.update(candle);
+        self.fold_with(candle, BarFeeds::default());
+    }
+
+    /// Fold one candle and its side feeds in O(1) per indicator: tick the set
+    /// and recompute the current feature row.
+    pub fn fold_with(&mut self, candle: &Candle, feeds: BarFeeds<'_>) {
+        self.inds.update(candle, feeds);
         self.cur_row = self
             .features
             .iter()

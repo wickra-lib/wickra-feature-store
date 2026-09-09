@@ -3,16 +3,78 @@
 //! Indicators are resolved by name and parameters from the `wickra-core`
 //! registry, reused through the `wickra-backtest-core` factory — the only
 //! name -> indicator resolver in the ecosystem. Each resolved indicator is an
-//! object-safe `EvalIndicator`, driven with a candle-only [`BarInput`] (no
-//! reference series, derivatives, order book or trades). Microstructure metrics
-//! resolve through the very same registry, only from the microstructure
-//! namespace, so they share this code path.
+//! object-safe `EvalIndicator`, driven with a [`BarInput`] carrying the candle
+//! and whatever side feeds the caller supplied — a reference close, a
+//! derivatives tick, an order book, the bar's trades, the market cross-section.
+//! Microstructure metrics resolve through the very same registry, only from the
+//! microstructure namespace, so they share this code path and read the same
+//! feeds.
+//!
+//! [`feed_kind`] answers which feed a name consumes, which is what lets
+//! [`crate::spec::FeatureSpec::check_feeds`] refuse a spec whose columns could
+//! only ever be `NaN`.
 
 use crate::error::{Error, Result};
 use crate::feature::{fmt_params, Feature};
+use crate::feeds::{BarFeeds, FeedKind};
 use std::collections::BTreeMap;
-use wickra_backtest_core::registry::{build, BarInput};
+use wickra_backtest_core::registry::{build, feed_of, BarInput};
+use wickra_backtest_core::spec::Feed;
 use wickra_backtest_core::{Candle, EvalIndicator};
+
+/// The pairwise indicators, which read the reference series' close alongside the
+/// bar close.
+///
+/// This list exists because `registry::feed_of` cannot express the family:
+/// upstream classifies every pairwise indicator as `Feed::Kline`, since the
+/// candle is indeed one of its two inputs. The `pairwise_list_matches_behaviour`
+/// test probes every name here against the live registry and fails if the list
+/// ever drifts from the set that actually needs a reference, so a registry that
+/// grows a new pairwise indicator cannot slip past silently.
+const PAIRWISE: [&str; 24] = [
+    "Alpha",
+    "Beta",
+    "BetaNeutralSpread",
+    "Cointegration",
+    "DistanceSsd",
+    "GrangerCausality",
+    "HasbrouckInformationShare",
+    "InformationRatio",
+    "KalmanHedgeRatio",
+    "KendallTau",
+    "LeadLagCrossCorrelation",
+    "OuHalfLife",
+    "PairSpreadZScore",
+    "PairwiseBeta",
+    "PearsonCorrelation",
+    "RelativeStrengthAB",
+    "RollingCorrelation",
+    "RollingCovariance",
+    "SpearmanCorrelation",
+    "SpreadAr1Coefficient",
+    "SpreadBollingerBands",
+    "SpreadHurst",
+    "TreynorRatio",
+    "VarianceRatio",
+];
+
+/// Which feed an indicator consumes, or `None` if the registry does not know it.
+///
+/// Wraps `registry::feed_of` and refines its `Kline` answer with the pairwise
+/// list, so a caller can tell "candle is enough" from "needs a reference".
+#[must_use]
+pub fn feed_kind(name: &str) -> Option<FeedKind> {
+    let feed = feed_of(name)?;
+    Some(match feed {
+        Feed::Kline if PAIRWISE.contains(&name) => FeedKind::Pair,
+        Feed::Kline => FeedKind::Candle,
+        Feed::Trade => FeedKind::Trades,
+        Feed::Orderbook => FeedKind::OrderBook,
+        Feed::TradeQuote => FeedKind::TradeQuote,
+        Feed::Derivatives => FeedKind::Derivatives,
+        Feed::CrossSection => FeedKind::CrossSection,
+    })
+}
 
 /// One resolved indicator plus its canonical registry key (`<name>(<p,p>)`).
 struct Entry {
@@ -73,17 +135,17 @@ impl IndicatorSet {
         Ok(())
     }
 
-    /// Fold one candle: every indicator ticks and records its primary value and
-    /// named fields into the current-bar map (cleared first).
-    pub fn update(&mut self, candle: &Candle) {
+    /// Fold one candle and its side feeds: every indicator ticks and records its
+    /// primary value and named fields into the current-bar map (cleared first).
+    pub fn update(&mut self, candle: &Candle, feeds: BarFeeds<'_>) {
         self.cur.clear();
         let bar = BarInput {
             candle,
-            reference: None,
-            deriv: None,
-            orderbook: None,
-            trades: &[],
-            cross_section: None,
+            reference: feeds.reference,
+            deriv: feeds.deriv,
+            orderbook: feeds.orderbook,
+            trades: feeds.trades,
+            cross_section: feeds.cross_section,
         };
         for entry in &mut self.items {
             if let Some(value) = entry.indicator.update(&bar) {
@@ -142,7 +204,7 @@ mod tests {
         })
         .unwrap();
         for c in [1.0, 2.0, 3.0, 4.0, 5.0] {
-            set.update(&candle(c));
+            set.update(&candle(c), BarFeeds::default());
         }
         assert_eq!(set.cur("Sma(3)"), Some(4.0));
     }

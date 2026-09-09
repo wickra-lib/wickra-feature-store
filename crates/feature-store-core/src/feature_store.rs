@@ -6,40 +6,15 @@
 //! byte-identical across all ten languages. Arrow/Parquet are binary and never
 //! cross this boundary; use the CLI or the native [`crate::arrow_out`] API.
 
-use crate::build::build as build_matrix;
+use crate::build::build_series as build_matrix;
 use crate::error::{Error, Result};
+use crate::feeds::{CandleInput, SymbolInputDoc, SymbolSeries};
 use crate::indicator_set::IndicatorSet;
 use crate::matrix::FeatureMatrix;
 use crate::spec::{FeatureSpec, OutputFormat};
-use crate::universe::Universe;
-use serde::Deserialize;
+use crate::universe::{PushFeeds, Universe};
 use std::collections::BTreeMap;
-use wickra_backtest_core::Candle;
-
-/// A candle in its JSON input form (`ts` is the timestamp; the core `Candle`
-/// calls the field `time`).
-#[derive(Deserialize)]
-struct CandleInput {
-    ts: i64,
-    open: f64,
-    high: f64,
-    low: f64,
-    close: f64,
-    volume: f64,
-}
-
-impl From<CandleInput> for Candle {
-    fn from(c: CandleInput) -> Self {
-        Candle {
-            time: c.ts,
-            open: c.open,
-            high: c.high,
-            low: c.low,
-            close: c.close,
-            volume: c.volume,
-        }
-    }
-}
+use wickra_backtest_core::{Candle, StepFeeds};
 
 /// The stateful feature-store handle: a spec plus the pushed candle universe.
 pub struct FeatureStore {
@@ -67,9 +42,15 @@ impl FeatureStore {
         self.spec = spec;
     }
 
-    /// Push one candle onto a symbol's streaming history.
+    /// Push one candle onto a symbol's streaming history, carrying no side
+    /// feeds.
     pub fn push(&mut self, symbol: &str, candle: &Candle) {
         self.universe.push(symbol, *candle);
+    }
+
+    /// Push one candle and the bar's side feeds onto a symbol's history.
+    pub fn push_with(&mut self, symbol: &str, candle: &Candle, feeds: &PushFeeds) {
+        self.universe.push_with(symbol, *candle, feeds);
     }
 
     /// Build the matrix from the current streaming state.
@@ -114,7 +95,8 @@ impl FeatureStore {
             "push" => {
                 let symbol = str_field(&envelope, "symbol")?;
                 let candle: CandleInput = parse_field(&envelope, "candle")?;
-                self.push(&symbol, &candle.into());
+                let feeds = parse_push_feeds(&envelope)?;
+                self.push_with(&symbol, &candle.into(), &feeds);
                 Ok(ok_json())
             }
             "push_batch" => {
@@ -177,12 +159,30 @@ fn parse_field<T: serde::de::DeserializeOwned>(
     serde_json::from_value(value.clone()).map_err(|e| Error::Parse(e.to_string()))
 }
 
-fn parse_data(envelope: &serde_json::Value) -> Result<BTreeMap<String, Vec<Candle>>> {
-    let raw: BTreeMap<String, Vec<CandleInput>> = parse_field(envelope, "data")?;
+fn parse_data(envelope: &serde_json::Value) -> Result<BTreeMap<String, SymbolSeries>> {
+    let raw: BTreeMap<String, SymbolInputDoc> = parse_field(envelope, "data")?;
     Ok(raw
         .into_iter()
-        .map(|(symbol, candles)| (symbol, candles.into_iter().map(Into::into).collect()))
+        .map(|(symbol, doc)| (symbol, doc.into()))
         .collect())
+}
+
+/// The optional per-bar side feeds of a `push` command. Absent means the bar
+/// carries none, which is the candle-only shorthand.
+fn parse_push_feeds(envelope: &serde_json::Value) -> Result<PushFeeds> {
+    match envelope.get("feeds") {
+        None | Some(serde_json::Value::Null) => Ok(PushFeeds::default()),
+        Some(value) => {
+            let feeds: StepFeeds = serde_json::from_value(value.clone())?;
+            Ok(PushFeeds {
+                reference: feeds.reference,
+                deriv: feeds.deriv,
+                orderbook: feeds.orderbook,
+                trades: feeds.trades,
+                cross_section: feeds.cross_section,
+            })
+        }
+    }
 }
 
 /// The output format for a `build`/`build_batch` command: the request override,
