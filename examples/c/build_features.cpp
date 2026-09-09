@@ -17,13 +17,13 @@ const char *SPEC =
 const char *CMD =
     R"({"cmd":"build_batch","data":{)"
     R"("AAA":[)"
-    R"({"time":1,"open":10,"high":10,"low":10,"close":10,"volume":1},)"
-    R"({"time":2,"open":11,"high":11,"low":11,"close":11,"volume":1},)"
-    R"({"time":3,"open":12,"high":12,"low":12,"close":12,"volume":1}],)"
+    R"({"ts":1,"open":10,"high":10,"low":10,"close":10,"volume":1},)"
+    R"({"ts":2,"open":11,"high":11,"low":11,"close":11,"volume":1},)"
+    R"({"ts":3,"open":12,"high":12,"low":12,"close":12,"volume":1}],)"
     R"("BBB":[)"
-    R"({"time":1,"open":20,"high":20,"low":20,"close":20,"volume":1},)"
-    R"({"time":2,"open":22,"high":22,"low":22,"close":22,"volume":1},)"
-    R"({"time":3,"open":24,"high":24,"low":24,"close":24,"volume":1}]}})";
+    R"({"ts":1,"open":20,"high":20,"low":20,"close":20,"volume":1},)"
+    R"({"ts":2,"open":22,"high":22,"low":22,"close":22,"volume":1},)"
+    R"({"ts":3,"open":24,"high":24,"low":24,"close":24,"volume":1}]}})";
 }  // namespace
 
 int main() {

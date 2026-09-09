@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>wickra-feature-store WASM — build a feature matrix</title>
+  <style>
+    body { font-family: ui-sans-serif, system-ui, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; color: #1d1d1d; }
+    h1 { margin-bottom: .25rem; }
+    .meta { color: #666; margin-top: 0; }
+    table { border-collapse: collapse; width: 100%; margin-top: 1rem; font-variant-numeric: tabular-nums; }
+    th, td { border: 1px solid #ddd; padding: .5rem .75rem; text-align: right; }
+    th:first-child, td:first-child { text-align: left; }
+    th { background: #fafafa; }
+    code { background: #f4f4f4; padding: .1rem .25rem; border-radius: .2rem; font-size: .9em; }
+    pre { background: #f6f8fa; padding: .75rem; border-radius: .3rem; overflow-x: auto; }
+    button { padding: .5rem 1rem; }
+    #status { margin-top: 1rem; color: #666; }
+  </style>
+</head>
+<body>
+  <h1>wickra-feature-store WASM — build a feature matrix</h1>
+  <p class="meta">
+    The same example every other language carries: build a store from a spec
+    (<code>Sma(2)</code>, the close, and a one-bar forward return), fold a
+    two-symbol universe through it and print the matrix. A spec is data rather
+    than code, which is why this page runs the identical spec bytes as
+    <code>examples/node/build_features.js</code> and produces the identical
+    matrix.
+  </p>
+
+  <p><button id="go" disabled>Build matrix</button></p>
+  <p id="status">Loading WASM module…</p>
+
+  <table id="rows" hidden>
+    <thead><tr id="head"><th>Symbol</th><th>ts</th></tr></thead>
+    <tbody></tbody>
+  </table>
+
+  <pre id="raw" hidden></pre>
+
+  <script type="module">
+    import init, { FeatureStore, version }
+      from "../../bindings/wasm/pkg/wickra_feature_store_wasm.js";
+
+    const SPEC = JSON.stringify({
+      universe: ["AAA", "BBB"],
+      features: [
+        { kind: "indicator", name: "Sma", params: [2] },
+        { kind: "price", field: "close" },
+      ],
+      labels: [{ kind: "forward_return", horizon: 1 }],
+    });
+
+    // The wire contract names the timestamp `ts`; the Rust `Candle` calls the
+    // field `time`, and only the native API sees that spelling.
+    const candle = (ts, close) => ({
+      ts, open: close, high: close, low: close, close, volume: 1.0,
+    });
+    const series = (closes) => closes.map((c, i) => candle(i + 1, c));
+
+    const status = document.getElementById("status");
+    const go = document.getElementById("go");
+
+    function run() {
+      // A fresh store per run: it carries per-symbol indicator state, so reusing
+      // one across clicks would fold the same candles in twice and the second
+      // matrix would not match the inputs on screen.
+      const store = new FeatureStore(SPEC);
+      const response = store.command(JSON.stringify({
+        cmd: "build_batch",
+        data: {
+          AAA: series([10.0, 11.0, 12.0]),
+          BBB: series([20.0, 22.0, 24.0]),
+        },
+      }));
+      const matrix = JSON.parse(response);
+
+      const head = document.getElementById("head");
+      head.replaceChildren();
+      for (const label of ["Symbol", "ts", ...matrix.columns]) {
+        const th = document.createElement("th");
+        th.textContent = label;
+        head.append(th);
+      }
+
+      const body = document.querySelector("#rows tbody");
+      body.replaceChildren();
+      matrix.index.forEach((id, i) => {
+        const tr = document.createElement("tr");
+        for (const cell of [id.symbol, id.ts, ...matrix.data[i]]) {
+          const td = document.createElement("td");
+          td.textContent = cell === null ? "—" : String(cell);
+          tr.append(td);
+        }
+        body.append(tr);
+      });
+      document.getElementById("rows").hidden = false;
+
+      const raw = document.getElementById("raw");
+      raw.textContent = JSON.stringify(matrix, null, 2);
+      raw.hidden = false;
+
+      status.textContent =
+        `${matrix.rows} row(s) — wickra-feature-store ${version()}.`;
+    }
+
+    await init();
+    status.textContent = `Module ready — wickra-feature-store ${version()}.`;
+    go.disabled = false;
+    go.addEventListener("click", () => {
+      try {
+        run();
+      } catch (err) {
+        status.textContent = `Error: ${err}`;
+      }
+    });
+  </script>
+</body>
+</html>

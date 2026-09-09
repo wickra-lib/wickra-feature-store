@@ -9,6 +9,12 @@ repository.workspace = true
 homepage.workspace = true
 description = "Data-driven feature-matrix core for the Wickra Feature Store."
 
+[package.metadata.docs.rs]
+# Document every feature so the optional Arrow/Parquet output is not missing from
+# the reference. docs.rs builds on nightly and sets the `docsrs` cfg, which is
+# what makes the feature badges appear.
+all-features = true
+
 [dependencies]
 serde = { workspace = true }
 serde_json = { workspace = true }

@@ -15,8 +15,8 @@ public final class BuildFeatures {
                     + "{\"kind\":\"price\",\"field\":\"close\"}],"
                     + "\"labels\":[{\"kind\":\"forward_return\",\"horizon\":1}]}";
 
-    private static String candle(int time, int close) {
-        return "{\"time\":" + time + ",\"open\":" + close + ",\"high\":" + close
+    private static String candle(int ts, int close) {
+        return "{\"ts\":" + ts + ",\"open\":" + close + ",\"high\":" + close
                 + ",\"low\":" + close + ",\"close\":" + close + ",\"volume\":1}";
     }
 

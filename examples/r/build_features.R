@@ -16,9 +16,9 @@ spec <- paste0(
   '"labels":[{"kind":"forward_return","horizon":1}]}'
 )
 
-candle <- function(time, close) {
+candle <- function(ts, close) {
   paste0(
-    '{"time":', time, ',"open":', close, ',"high":', close,
+    '{"ts":', ts, ',"open":', close, ',"high":', close,
     ',"low":', close, ',"close":', close, ',"volume":1}'
   )
 }
