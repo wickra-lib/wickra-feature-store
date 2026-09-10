@@ -24,7 +24,15 @@ test(
   "build_batch matches the committed golden byte-for-byte",
   { skip: !fs.existsSync(GOLDEN) ? "golden fixtures not present yet" : false },
   () => {
-    const dataset = JSON.parse(fs.readFileSync(path.join(GOLDEN, "data.json"), "utf8"));
+    // A spec named `feeds_*` is folded over the dataset carrying one side feed
+    // per family; every other spec over the candle-only one. Sending the
+    // candle-only dataset to a fed spec is refused by name -- that refusal is
+    // the point of the feed check, so picking the right dataset is part of
+    // speaking the protocol correctly.
+    const load = (name) =>
+      JSON.parse(fs.readFileSync(path.join(GOLDEN, name), "utf8"));
+    const candlesOnly = load("data.json");
+    const fed = load("data-feeds.json");
     const specs = fs
       .readdirSync(path.join(GOLDEN, "specs"))
       .filter((f) => f.endsWith(".json"))
@@ -34,6 +42,7 @@ test(
       const expected = fs
         .readFileSync(path.join(GOLDEN, "expected", specFile), "utf8")
         .trim();
+      const dataset = specFile.startsWith("feeds_") ? fed : candlesOnly;
       const got = new FeatureStore(spec).command(
         JSON.stringify({ cmd: "build_batch", data: dataset }),
       );
