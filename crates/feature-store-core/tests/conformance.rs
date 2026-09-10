@@ -7,7 +7,7 @@ use std::collections::BTreeMap;
 
 use feature_store_core::{
     build, Candle, Error, Feature, FeatureSpec, Label, OutputFormat, PriceField, Scaling,
-    WarmupPolicy,
+    SymbolInput, WarmupPolicy,
 };
 use serde_json::json;
 
@@ -180,13 +180,13 @@ fn candle(time: i64, close: f64) -> Candle {
     }
 }
 
-fn single_symbol(closes: &[f64]) -> BTreeMap<String, Vec<Candle>> {
-    let candles = closes
+fn single_symbol(closes: &[f64]) -> BTreeMap<String, SymbolInput> {
+    let candles: Vec<Candle> = closes
         .iter()
         .enumerate()
         .map(|(i, &c)| candle(i64::try_from(i).unwrap(), c))
         .collect();
-    BTreeMap::from([("AAA".to_string(), candles)])
+    BTreeMap::from([("AAA".to_string(), candles.into())])
 }
 
 #[test]

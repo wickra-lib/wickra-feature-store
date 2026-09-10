@@ -16,6 +16,7 @@ pub mod config;
 pub mod error;
 pub mod feature;
 pub mod feature_store;
+pub mod feeds;
 pub mod indicator_set;
 pub mod label;
 pub mod matrix;
@@ -27,18 +28,22 @@ pub mod universe;
 #[cfg(feature = "arrow")]
 pub mod arrow_out;
 
-pub use build::build;
+pub use build::{build, build_series};
 pub use config::Config;
 pub use error::{Error, Result};
 pub use feature::{Feature, PriceField};
 pub use feature_store::FeatureStore;
-pub use indicator_set::IndicatorSet;
+pub use feeds::{
+    Available, BarFeeds, CandleInput, FeedKind, OwnedBarFeeds, SeriesDoc, SymbolInput,
+    SymbolInputDoc, SymbolSeries,
+};
+pub use indicator_set::{feed_kind, IndicatorSet};
 pub use label::{forward_return, triple_barrier, Label};
 pub use matrix::{round_to, FeatureMatrix, RowId};
 pub use scaling::apply_scaling;
 pub use spec::{FeatureSpec, OutputFormat, Scaling, WarmupPolicy};
 pub use symbol_state::SymbolState;
-pub use universe::Universe;
+pub use universe::{PushFeeds, Universe};
 
 /// The candle input type, re-exported from the shared engine.
 pub use wickra_backtest_core::Candle;

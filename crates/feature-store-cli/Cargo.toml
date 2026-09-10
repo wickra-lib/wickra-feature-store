@@ -27,6 +27,12 @@ path = "src/main.rs"
 default = []
 arrow = ["dep:arrow", "feature-store-core/arrow"]
 
+[package.metadata.docs.rs]
+# Document every feature so the optional Arrow/Parquet output is not missing from
+# the reference. docs.rs builds on nightly and sets the `docsrs` cfg, which is
+# what makes the feature badges appear.
+all-features = true
+
 [dependencies]
 # The data-driven feature-matrix core. Default features are off so the workspace
 # `--no-default-features` job still exercises the core's sequential path through

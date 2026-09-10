@@ -9,6 +9,12 @@ repository.workspace = true
 homepage.workspace = true
 description = "Data-driven feature-matrix core for the Wickra Feature Store."
 
+[package.metadata.docs.rs]
+# Document every feature so the optional Arrow/Parquet output is not missing from
+# the reference. docs.rs builds on nightly and sets the `docsrs` cfg, which is
+# what makes the feature badges appear.
+all-features = true
+
 [dependencies]
 serde = { workspace = true }
 serde_json = { workspace = true }
@@ -17,6 +23,8 @@ thiserror = { workspace = true }
 # The only name -> indicator registry in the ecosystem (re-exports Candle and
 # the object-safe EvalIndicator trait too).
 wickra-backtest-core = { workspace = true }
+# The indicator types the registry's side feeds are expressed in.
+wickra-core = { workspace = true }
 # Data-parallel per-symbol build (default via the `parallel` feature; the WASM
 # path builds sequentially with the feature off, byte-for-byte identical).
 rayon = { workspace = true, optional = true }

@@ -13,3 +13,7 @@
 - [ ] The spec stays data (a serde `FeatureSpec`), never Rust closures
 - [ ] Binding surface mirrored across languages; golden matrices regenerated if the schema changed
 - [ ] `CHANGELOG.md` updated under `[Unreleased]`
+
+<!-- For a larger change, the long-form template asks the questions this one
+     does not: append `?template=detailed.md` to the PR URL, or copy
+     `.github/PULL_REQUEST_TEMPLATE/detailed.md` in by hand. -->

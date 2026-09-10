@@ -12,7 +12,7 @@ use std::collections::BTreeMap;
 use std::fmt::Write as _;
 
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
-use feature_store_core::{build, Candle, FeatureSpec};
+use feature_store_core::{build, Candle, FeatureSpec, SymbolInput};
 
 const BARS: usize = 200;
 
@@ -40,9 +40,9 @@ fn symbol_series(seed: usize) -> Vec<Candle> {
         .collect()
 }
 
-fn universe(symbols: usize) -> BTreeMap<String, Vec<Candle>> {
+fn universe(symbols: usize) -> BTreeMap<String, SymbolInput> {
     (0..symbols)
-        .map(|s| (format!("SYM{s:05}"), symbol_series(s)))
+        .map(|s| (format!("SYM{s:05}"), symbol_series(s).into()))
         .collect()
 }
 

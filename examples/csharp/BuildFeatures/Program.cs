@@ -12,8 +12,8 @@ const string spec =
     "{\"kind\":\"price\",\"field\":\"close\"}]," +
     "\"labels\":[{\"kind\":\"forward_return\",\"horizon\":1}]}";
 
-static object Candle(int time, double close) =>
-    new { time, open = close, high = close, low = close, close, volume = 1.0 };
+static object Candle(int ts, double close) =>
+    new { ts, open = close, high = close, low = close, close, volume = 1.0 };
 
 static object[] Series(double[] closes)
 {

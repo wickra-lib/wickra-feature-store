@@ -10,6 +10,15 @@ pub enum Error {
     /// A feature or microstructure metric is not known to the registry.
     #[error("unknown indicator: {0}")]
     UnknownIndicator(String),
+    /// A feature names an indicator whose side feed the build cannot supply.
+    /// Without this the column would be `NaN` for its whole length, silently.
+    #[error("{indicator} needs the {feed} feed, which this build does not supply")]
+    MissingFeed {
+        /// The registry name that needs the feed.
+        indicator: String,
+        /// The feed it consumes, as named in the spec payload.
+        feed: &'static str,
+    },
     /// The spec is structurally invalid (empty features, zero horizon, ...).
     #[error("bad spec: {0}")]
     BadSpec(String),

@@ -21,6 +21,7 @@ and the blessed cross-language golden corpus lives in [`../golden/`](../golden).
 | C# | [`csharp/BuildFeatures/`](csharp/BuildFeatures/) | `dotnet run --project examples/csharp/BuildFeatures` |
 | Java | [`java/BuildFeatures.java`](java/BuildFeatures.java) | see the header comment |
 | R | [`r/build_features.R`](r/build_features.R) | `Rscript examples/r/build_features.R` |
+| WASM | [`wasm/build.html`](wasm/build.html) | serve the repository root, then open `examples/wasm/build.html` |
 
 The native bindings (Python, Node.js) load their own compiled library. The
 bindings that go through the C ABI (Go, C#, Java, R, and the C/C++ example

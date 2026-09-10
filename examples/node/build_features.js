@@ -16,8 +16,8 @@ const SPEC = JSON.stringify({
   labels: [{ kind: "forward_return", horizon: 1 }],
 });
 
-const candle = (time, close) => ({
-  time,
+const candle = (ts, close) => ({
+  ts,
   open: close,
   high: close,
   low: close,

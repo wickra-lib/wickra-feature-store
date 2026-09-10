@@ -1,36 +1,12 @@
 //! Load the spec and universe, build the feature matrix, and emit it.
 
 use crate::args::{Args, Format};
-use feature_store_core::{build, Candle, FeatureSpec, OutputFormat};
-use serde::Deserialize;
+use feature_store_core::{
+    build_series, Candle, FeatureSpec, OutputFormat, SymbolInputDoc, SymbolSeries,
+};
 use std::collections::BTreeMap;
 use std::io::Read as _;
 use std::path::Path;
-
-/// A candle in its JSON input form (`ts` is the timestamp; the core `Candle`
-/// calls the field `time`). Mirrors the boundary type in `feature-store-core`.
-#[derive(Deserialize)]
-struct CandleInput {
-    ts: i64,
-    open: f64,
-    high: f64,
-    low: f64,
-    close: f64,
-    volume: f64,
-}
-
-impl From<CandleInput> for Candle {
-    fn from(c: CandleInput) -> Self {
-        Candle {
-            time: c.ts,
-            open: c.open,
-            high: c.high,
-            low: c.low,
-            close: c.close,
-            volume: c.volume,
-        }
-    }
-}
 
 /// Load the inputs, build the matrix and write the output where requested.
 ///
@@ -52,7 +28,7 @@ pub fn run(args: &Args) -> Result<(), String> {
         return Err("no data source (pass --data or --stdin)".to_string());
     };
 
-    let matrix = build(&data, &spec).map_err(|e| e.to_string())?;
+    let matrix = build_series(&data, &spec).map_err(|e| e.to_string())?;
     let format = resolve_format(args.format, spec.output);
 
     match format {
@@ -80,8 +56,10 @@ fn load_spec(path: &Path) -> Result<FeatureSpec, String> {
     parsed.map_err(|e| e.to_string())
 }
 
-/// Load a universe from a directory of `<SYMBOL>.csv` files.
-fn load_data_dir(dir: &Path) -> Result<BTreeMap<String, Vec<Candle>>, String> {
+/// Load a universe from a directory of `<SYMBOL>.csv` files. CSV carries OHLCV
+/// only, so these series carry no side feeds; a spec needing one is refused by
+/// name rather than emitted as a silently empty column.
+fn load_data_dir(dir: &Path) -> Result<BTreeMap<String, SymbolSeries>, String> {
     let mut data = BTreeMap::new();
     let entries = std::fs::read_dir(dir).map_err(|e| format!("read dir {}: {e}", dir.display()))?;
     for entry in entries {
@@ -96,22 +74,33 @@ fn load_data_dir(dir: &Path) -> Result<BTreeMap<String, Vec<Candle>>, String> {
             .to_string();
         let content =
             std::fs::read_to_string(&path).map_err(|e| format!("read {}: {e}", path.display()))?;
-        data.insert(symbol, parse_csv(&content)?);
+        data.insert(
+            symbol,
+            SymbolSeries {
+                candles: parse_csv(&content)?,
+                ..SymbolSeries::default()
+            },
+        );
     }
     Ok(data)
 }
 
-/// Load a universe as a JSON dataset (`{"SYMBOL": [candle, ...]}`) from stdin.
-fn load_stdin() -> Result<BTreeMap<String, Vec<Candle>>, String> {
+/// Load a universe as a JSON dataset from stdin.
+///
+/// A symbol is either a bare candle array (`{"SYMBOL": [candle, ...]}`) or the
+/// full series with its side feeds
+/// (`{"SYMBOL": {"candles": [...], "books": [...]}}`), so a spec naming an
+/// order-book or trade-flow indicator can be fed from the command line.
+fn load_stdin() -> Result<BTreeMap<String, SymbolSeries>, String> {
     let mut buf = String::new();
     std::io::stdin()
         .read_to_string(&mut buf)
         .map_err(|e| e.to_string())?;
-    let raw: BTreeMap<String, Vec<CandleInput>> =
+    let raw: BTreeMap<String, SymbolInputDoc> =
         serde_json::from_str(&buf).map_err(|e| format!("parse stdin dataset: {e}"))?;
     Ok(raw
         .into_iter()
-        .map(|(symbol, candles)| (symbol, candles.into_iter().map(Into::into).collect()))
+        .map(|(symbol, doc)| (symbol, doc.into()))
         .collect())
 }
 
@@ -226,6 +215,7 @@ fn write_arrow_ipc(matrix: &feature_store_core::FeatureMatrix, path: &Path) -> R
 #[cfg(test)]
 mod tests {
     use super::*;
+    use feature_store_core::CandleInput;
 
     #[test]
     fn parses_csv_with_a_header() {

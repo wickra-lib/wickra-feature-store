@@ -16,7 +16,7 @@ There are three feature kinds, tagged by `"kind"`:
 
 ## `indicator`
 
-Any of the 514 streaming indicators from
+Any of the 497 streaming indicators from
 [`wickra-core`](https://github.com/wickra-lib/wickra). `name` is the indicator's
 registry name in PascalCase (`Sma`, `Ema`, `Rsi`, `Atr`, `Macd`, …) and `params`
 is its ordered numeric parameter list. Each feature cell is the indicator's

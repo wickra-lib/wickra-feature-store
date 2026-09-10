@@ -3,7 +3,7 @@
 //! when built with the `arrow` feature — the columnar path must write a readable
 //! file.
 
-use feature_store_core::{build, Candle, FeatureSpec};
+use feature_store_core::{build, Candle, FeatureSpec, SymbolInput};
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -29,7 +29,7 @@ fn workdir(tag: &str) -> PathBuf {
 
 /// The universe the CSV fixture decodes to — used to recompute the expected
 /// matrix in-process.
-fn fixture_universe() -> BTreeMap<String, Vec<Candle>> {
+fn fixture_universe() -> BTreeMap<String, SymbolInput> {
     let candles = vec![
         Candle {
             time: 1,
@@ -57,7 +57,7 @@ fn fixture_universe() -> BTreeMap<String, Vec<Candle>> {
         },
     ];
     let mut data = BTreeMap::new();
-    data.insert("AAA".to_string(), candles);
+    data.insert("AAA".to_string(), candles.into());
     data
 }
 

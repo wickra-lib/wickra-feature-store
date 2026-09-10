@@ -20,9 +20,9 @@ SPEC = json.dumps(
 )
 
 
-def candle(time: int, close: float) -> dict:
+def candle(ts: int, close: float) -> dict:
     return {
-        "time": time,
+        "ts": ts,
         "open": close,
         "high": close,
         "low": close,
