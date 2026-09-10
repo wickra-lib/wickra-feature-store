@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **The C++ example now goes through the C++ hull.** It called the C functions
+  directly and rebuilt the two-call length protocol by hand -- the very thing
+  `wickra_feature_store.hpp` exists to remove -- which left the shipped C++
+  surface built by nothing. Verified by running both: the C and C++ examples
+  print byte-identical output.
+
 - **Every C++ hull used the include guard `WICKRA_SCREENER_HPP`.** The C headers
   beside them are guarded correctly; only the `.hpp` files shared one name, so
   including two of the family's headers in the same translation unit dropped the

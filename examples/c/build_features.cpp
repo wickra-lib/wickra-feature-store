@@ -1,11 +1,17 @@
-// A minimal C++ example: build a feature matrix through the wickra-feature-store
-// C ABI.
-#include <cstddef>
+// A minimal C++ example: build a feature matrix over a two-symbol universe.
+//
+// This goes through `wickra_feature_store.hpp`, the C++ hull shipped beside the
+// C header, because that hull is what a C++ caller is meant to use: it owns and
+// frees the handle, runs the two-call length protocol behind
+// `wickra_feature_store_command` for you, and turns a refusal into an exception
+// rather than a negative integer that is easy to ignore. Calling the C
+// functions directly from C++ works too -- `build_features.c` shows that -- but
+// then the hull would be shipped with only `streaming_test.cpp` building it.
+#include <exception>
 #include <iostream>
 #include <string>
-#include <vector>
 
-#include "wickra_feature_store.h"
+#include "wickra_feature_store.hpp"
 
 namespace {
 const char *SPEC =
@@ -27,25 +33,15 @@ const char *CMD =
 }  // namespace
 
 int main() {
-    WickraFeatureStore *store = wickra_feature_store_new(SPEC);
-    if (store == nullptr) {
-        std::cerr << "failed to build feature store\n";
+    try {
+        wickra::FeatureStore store(SPEC);
+        const std::string matrix = store.command(CMD);
+
+        std::cout << "wickra-feature-store " << wickra::FeatureStore::version() << "\n";
+        std::cout << "matrix: " << matrix << "\n";
+    } catch (const std::exception &e) {
+        std::cerr << "failed: " << e.what() << "\n";
         return 1;
     }
-
-    int len = wickra_feature_store_command(store, CMD, nullptr, 0);
-    if (len < 0) {
-        std::cerr << "command failed: code " << len << "\n";
-        wickra_feature_store_free(store);
-        return 1;
-    }
-    std::vector<char> buf(static_cast<std::size_t>(len) + 1);
-    wickra_feature_store_command(store, CMD, buf.data(),
-                                 static_cast<std::size_t>(buf.size()));
-
-    std::cout << "wickra-feature-store " << wickra_feature_store_version() << "\n";
-    std::cout << "matrix: " << std::string(buf.data()) << "\n";
-
-    wickra_feature_store_free(store);
     return 0;
 }
