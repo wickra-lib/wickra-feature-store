@@ -1,0 +1,22 @@
+{
+  "universe": [
+    "sym-01",
+    "sym-02",
+    "sym-03",
+    "sym-04",
+    "sym-05",
+    "sym-06"
+  ],
+  "timeframe": "1h",
+  "features": [
+    {
+      "kind": "indicator",
+      "name": "AdvanceDecline",
+      "params": []
+    },
+    {
+      "kind": "price",
+      "field": "close"
+    }
+  ]
+}

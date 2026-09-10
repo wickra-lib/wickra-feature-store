@@ -8,7 +8,7 @@
 mod common;
 
 use arrow::array::{Array, Float64Array, Int64Array, StringArray};
-use feature_store_core::{arrow_out, build, FeatureMatrix};
+use feature_store_core::{arrow_out, build_series, FeatureMatrix};
 use parquet::arrow::arrow_reader::ParquetRecordBatchReaderBuilder;
 
 /// Read every row group of a Parquet file back into a single flat table:
@@ -91,9 +91,9 @@ fn assert_roundtrip(name: &str, matrix: &FeatureMatrix) {
 
 #[test]
 fn parquet_roundtrip_reproduces_every_golden_matrix() {
-    let data = common::load_data();
     for (name, spec) in common::load_specs() {
-        let matrix = build(&data, &spec).unwrap_or_else(|e| panic!("build {name}: {e}"));
+        let data = common::data_for(&name);
+        let matrix = build_series(&data, &spec).unwrap_or_else(|e| panic!("build {name}: {e}"));
         assert_roundtrip(&name, &matrix);
     }
 }
