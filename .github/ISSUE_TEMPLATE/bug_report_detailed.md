@@ -14,7 +14,7 @@ A clear description of the incorrect behaviour.
 **The spec**
 
 ```json
-# the smallest ScanSpec that shows it
+# the smallest FeatureSpec that shows it
 ```
 
 **The universe**

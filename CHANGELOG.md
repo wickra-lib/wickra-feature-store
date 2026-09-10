@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Every C++ hull used the include guard `WICKRA_SCREENER_HPP`.** The C headers
+  beside them are guarded correctly; only the `.hpp` files shared one name, so
+  including two of the family's headers in the same translation unit dropped the
+  second silently. Proven by compiling a file that includes two of them and
+  names a class from each: `'Env' is not a member of 'wickra'`. All seven now
+  compile standalone and together.
+
+- **The hull's usage example could not run.** It showed a spec shaped
+  `{"universe":[...]}` and `{"cmd":"scan"}`, the screener's, which this core
+  rejects twice over. It now shows this repository's own spec fields and one of
+  its own commands.
+
+- **The issue and pull-request templates asked for a `ScanSpec`**, a type this
+  repository does not have, so a contributor was asked to attach something that
+  does not exist. `GOVERNANCE.md`, `SUPPORT.md` and `CONTRIBUTING.md` carried
+  the same substitution, along with the screener's "condition schema" for a core
+  that has no conditions.
+
+- **The R `configure` scripts still defined `wkscreen_download`**, the last
+  trace of the screener's prefix — the CI-visible half of which already had to
+  be fixed once.
+
 - **Dependabot watched directories that do not exist**, so it reported nothing
   and the silence read as calm. The `pip` ecosystem did not cover
   `/.github/requirements` and the `npm` one did not cover `/examples/node`,
