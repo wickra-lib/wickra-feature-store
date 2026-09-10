@@ -9,6 +9,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Dependabot watched directories that do not exist**, so it reported nothing
+  and the silence read as calm. The `pip` ecosystem did not cover
+  `/.github/requirements` and the `npm` one did not cover `/examples/node`,
+  though both manifests are here.
+
+- **`release.yml` overwrote the binding READMEs before packing.** Three steps
+  copied the root README over `bindings/python/README.md` (wheel and sdist) and
+  `bindings/node/README.md`. They date from when the bindings had no README of
+  their own; they do now, one per registry, and `check_readme_links.py` exists to
+  keep their links absolute because a relative link is dead on PyPI and npm. The
+  copy threw that away and shipped the root README, whose links are relative by
+  design. The remaining relative links in the C, C#, Go and WASM READMEs are
+  absolute now.
+
+- **The Python wheel would have shipped without its licence texts.**
+  `bindings/python/` carried neither `LICENSE-MIT` nor `LICENSE-APACHE`, so
+  maturin had nothing to include, while every crate and the release archive
+  carry both.
+
+- **`SECURITY.md` named a support policy for releases that do not exist yet.**
+  It promised fixes for "the latest `0.x` release line" where there is no
+  released line; it now says plainly that nothing is published and names `0.1.0`
+  as the first version that will be.
+
+- **The bench could not measure the sequential path it advertises.** It took the
+  core with default features on -- and `default = ["parallel"]` -- so its own
+  `parallel` feature was a no-op and `--no-default-features` changed nothing. In
+  the feature store the manifest comment even said "default features off
+  (inherited from the workspace edge)", which the workspace edge did not do.
+
 - **Three places still carried 514** after the headline count was corrected to
   497: the workspace manifest's own comment, the npm package description and
   the core crate's module docs.
