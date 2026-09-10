@@ -1,6 +1,6 @@
 # Wickra Feature Store — workspace.
 # One data-driven core (`feature-store-core`): a serde FeatureSpec is folded
-# over each symbol's history with 514 O(1) streaming indicators, one feature row
+# over each symbol's history with 497 O(1) streaming indicators, one feature row
 # per bar, labels joined over a forward horizon, scaled, and materialized as a
 # feature matrix — in parallel (rayon) or sequentially (the WASM fallback),
 # byte-for-byte identical. The core is exposed as a JSON-over-C-ABI data API in

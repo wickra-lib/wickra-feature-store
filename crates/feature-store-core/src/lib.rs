@@ -1,7 +1,7 @@
 //! Data-driven feature-matrix core for the Wickra Feature Store.
 //!
 //! A [`spec::FeatureSpec`] (parsed from JSON or TOML) is folded over each
-//! symbol's history: 514 O(1) streaming indicators, raw price fields and
+//! symbol's history: 497 O(1) streaming indicators, raw price fields and
 //! microstructure metrics become feature columns, forward-looking targets become
 //! label columns, and the result is materialized as a [`matrix::FeatureMatrix`]
 //! — deterministic across languages, batch/streaming, and parallel/sequential.

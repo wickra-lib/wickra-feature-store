@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Three places still carried 514** after the headline count was corrected to
+  497: the workspace manifest's own comment, the npm package description and
+  the core crate's module docs.
+
+- **The Ecosystem section repeated two claims their own repositories had already
+  corrected**: DARWIN at "millions of backtests per second" across "the
+  514-indicator space", where its benchmark says hundreds of thousands over the
+  registry, and GENOME as "a 514-dim live vector", where the dimension is
+  whatever the spec's feature list names.
+
 - **Indicators that read a side feed produced nothing, silently.**
   `IndicatorSet::update` hardcoded the reference series, derivatives tick,
   order book, trades and cross-section to absent, so an indicator needing
