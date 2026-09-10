@@ -440,7 +440,8 @@ jobs:
           export WKFEATURESTORE_INC="${WKFEATURESTORE_INC//\\//}"
           export WKFEATURESTORE_LIB="${WKFEATURESTORE_LIB//\\//}"
           if command -v cygpath >/dev/null 2>&1; then
-            export PATH="$(cygpath -u "$WKFEATURESTORE_LIB"):$PATH"
+            WKFEATURESTORE_LIB_UNIX=$(cygpath -u "$WKFEATURESTORE_LIB")
+            export PATH="$WKFEATURESTORE_LIB_UNIX:$PATH"
           else
             export LD_LIBRARY_PATH="$WKFEATURESTORE_LIB:$LD_LIBRARY_PATH"
             export DYLD_LIBRARY_PATH="$WKFEATURESTORE_LIB:$DYLD_LIBRARY_PATH"
