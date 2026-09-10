@@ -11,15 +11,15 @@
 //
 //     #include <wickra_feature_store.hpp>
 //
-//     wickra::FeatureStore store(R"({"universe":["AAA"], ... })");
+//     wickra::FeatureStore store(R"({"universe":["AAA"],"features":[...]})");
 //     std::string matrix = store.command(R"({"cmd":"build_batch","data":{...}})");
 //
 // The feature store is data-driven, so this wrapper deliberately stops at strings:
 // the spec and the matrix are JSON, and which JSON library a caller uses is
 // their choice, not this header's.
 
-#ifndef WICKRA_SCREENER_HPP
-#define WICKRA_SCREENER_HPP
+#ifndef WICKRA_FEATURE_STORE_HPP
+#define WICKRA_FEATURE_STORE_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -114,4 +114,4 @@ class FeatureStore {
 
 }  // namespace wickra
 
-#endif  // WICKRA_SCREENER_HPP
+#endif  // WICKRA_FEATURE_STORE_HPP

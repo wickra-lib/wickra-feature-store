@@ -26,7 +26,7 @@ say which, and whether the machine was otherwise idle.
 **The spec**
 
 ```json
-# the ScanSpec you measured
+# the FeatureSpec you measured
 ```
 
 **Does it scale differently, or is it a constant factor?**
