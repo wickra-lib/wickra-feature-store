@@ -2,14 +2,14 @@
 # Resolve the wickra-feature-store C ABI (header + shared library) for the Unix build.
 #
 # Until this existed the package built only where something had already set
-# WKSCREEN_INC and WKSCREEN_LIB -- which is to say, only in this repository's CI. A user
+# WKFEATURESTORE_INC and WKFEATURESTORE_LIB -- which is to say, only in this repository's CI. A user
 # running install.packages() got a compiler error about a missing header.
 #
 # Self-contained by default: download the prebuilt wickra-feature-store-c-<triple>.tar.gz
 # release asset matching this package's version and stage the shared library into
 # src/, so the compiled object links against it and bundles it (via
 # install.libs.R), found post-install through an rpath ($ORIGIN on Linux,
-# @loader_path on macOS). Set WKSCREEN_INC + WKSCREEN_LIB to build against a locally
+# @loader_path on macOS). Set WKFEATURESTORE_INC + WKFEATURESTORE_LIB to build against a locally
 # built C ABI instead (the dev override; e.g. `cargo build -p wickra-feature-store-c
 # --release`). Download and extraction use base R, which is always present at
 # build time, so there is no curl/wget system dependency.
@@ -50,10 +50,10 @@ if [ "$(uname -s)" = "Emscripten" ]; then
   exit 1
 fi
 
-if [ -n "${WKSCREEN_INC}" ] && [ -n "${WKSCREEN_LIB}" ]; then
-  echo "wickra-feature-store: using the C ABI from WKSCREEN_INC / WKSCREEN_LIB (dev override)"
-  inc="${WKSCREEN_INC}"
-  lib="${WKSCREEN_LIB}"
+if [ -n "${WKFEATURESTORE_INC}" ] && [ -n "${WKFEATURESTORE_LIB}" ]; then
+  echo "wickra-feature-store: using the C ABI from WKFEATURESTORE_INC / WKFEATURESTORE_LIB (dev override)"
+  inc="${WKFEATURESTORE_INC}"
+  lib="${WKFEATURESTORE_LIB}"
 else
   version=$(sed -n 's/^Version:[[:space:]]*//p' DESCRIPTION)
   os=$(uname -s)
@@ -63,18 +63,18 @@ else
       case "${arch}" in
         x86_64) triple="x86_64-unknown-linux-gnu" ;;
         aarch64 | arm64) triple="aarch64-unknown-linux-gnu" ;;
-        *) echo "wickra-feature-store: unsupported Linux arch '${arch}' -- set WKSCREEN_INC/WKSCREEN_LIB"; exit 1 ;;
+        *) echo "wickra-feature-store: unsupported Linux arch '${arch}' -- set WKFEATURESTORE_INC/WKFEATURESTORE_LIB"; exit 1 ;;
       esac
       ;;
     Darwin)
       case "${arch}" in
         x86_64) triple="x86_64-apple-darwin" ;;
         arm64 | aarch64) triple="aarch64-apple-darwin" ;;
-        *) echo "wickra-feature-store: unsupported macOS arch '${arch}' -- set WKSCREEN_INC/WKSCREEN_LIB"; exit 1 ;;
+        *) echo "wickra-feature-store: unsupported macOS arch '${arch}' -- set WKFEATURESTORE_INC/WKFEATURESTORE_LIB"; exit 1 ;;
       esac
       ;;
     *)
-      echo "wickra-feature-store: unsupported OS '${os}' -- set WKSCREEN_INC/WKSCREEN_LIB"
+      echo "wickra-feature-store: unsupported OS '${os}' -- set WKFEATURESTORE_INC/WKFEATURESTORE_LIB"
       exit 1
       ;;
   esac
@@ -113,6 +113,6 @@ case "$(uname -s)" in
     ;;
 esac
 
-sed "s|@WKSCREEN_RPATH@|${rpath}|" src/Makevars.in > src/Makevars
+sed "s|@WKFEATURESTORE_RPATH@|${rpath}|" src/Makevars.in > src/Makevars
 echo "wickra-feature-store: configured (bundled ${staged})"
 exit 0

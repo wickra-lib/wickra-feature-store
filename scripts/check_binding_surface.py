@@ -50,7 +50,7 @@ EXPORT = re.compile(r"\bwickra_feature_store_([a-z0-9_]+)\s*\(")
 # capability, not a hole.
 #
 # Python is checked in its PyO3 source rather than in `__init__.py`: the package
-# file only re-exports `Feature Store` from the compiled module, so the methods
+# file only re-exports `FeatureStore` from the compiled module, so the methods
 # themselves are declared in Rust. Checking the re-export alone would pass a
 # binding that had lost `command`.
 BINDINGS: dict[str, tuple[list[str], dict[str, str]]] = {
@@ -81,9 +81,9 @@ BINDINGS: dict[str, tuple[list[str], dict[str, str]]] = {
         },
     ),
     "csharp": (
-        ["bindings/csharp/WickraFeatureStore/Feature Store.cs"],
+        ["bindings/csharp/WickraFeatureStore/FeatureStore.cs"],
         {
-            "new": r"(?m)^\s*public Feature Store\s*\(",
+            "new": r"(?m)^\s*public FeatureStore\s*\(",
             "command": r"(?m)^\s*public [^\n]*\bCommand\s*\(",
             "version": r"(?m)^\s*public static [^\n]*\bVersion\s*\(",
         },
@@ -92,24 +92,24 @@ BINDINGS: dict[str, tuple[list[str], dict[str, str]]] = {
         ["bindings/go/wickra.go"],
         {
             "new": r"(?m)^func New\s*\(",
-            "command": r"(?m)^func \([^)]*\*Feature Store\) Command\s*\(",
+            "command": r"(?m)^func \([^)]*\*FeatureStore\) Command\s*\(",
             "version": r"(?m)^func Version\s*\(",
         },
     ),
     "java": (
-        ["bindings/java/src/main/java/org/wickra/feature-store/Feature Store.java"],
+        ["bindings/java/src/main/java/org/wickra/featurestore/FeatureStore.java"],
         {
-            "new": r"(?m)^\s*public Feature Store\s*\(",
+            "new": r"(?m)^\s*public FeatureStore\s*\(",
             "command": r"(?m)^\s*public [^\n]*\bcommand\s*\(",
             "version": r"(?m)^\s*public static [^\n]*\bversion\s*\(",
         },
     ),
     "r": (
-        ["bindings/r/R/feature-store.R", "bindings/r/NAMESPACE"],
+        ["bindings/r/R/feature_store.R", "bindings/r/NAMESPACE"],
         {
-            "new": r"(?m)^wkscreen_new\s*<-\s*function",
-            "command": r"(?m)^wkscreen_command\s*<-\s*function",
-            "version": r"(?m)^wkscreen_version\s*<-\s*function",
+            "new": r"(?m)^wkfeaturestore_new\s*<-\s*function",
+            "command": r"(?m)^wkfeaturestore_command\s*<-\s*function",
+            "version": r"(?m)^wkfeaturestore_version\s*<-\s*function",
         },
     ),
     # The C++ hull is a separate reach over the same header, and it is the one
@@ -117,7 +117,7 @@ BINDINGS: dict[str, tuple[list[str], dict[str, str]]] = {
     "cpp": (
         ["bindings/c/include/wickra_feature_store.hpp"],
         {
-            "new": r"\bFeature Store\s*\(\s*(?:const\s+)?std::string",
+            "new": r"\bFeatureStore\s*\(\s*(?:const\s+)?std::string",
             "command": r"\bcommand\s*\(",
             "version": r"\bversion\s*\(",
         },

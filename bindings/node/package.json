@@ -47,12 +47,12 @@
     "node": ">= 22"
   },
   "optionalDependencies": {
-    "wickra-feature-store-linux-x64-gnu": "0.1.0",
-    "wickra-feature-store-linux-arm64-gnu": "0.1.0",
-    "wickra-feature-store-darwin-x64": "0.1.0",
     "wickra-feature-store-darwin-arm64": "0.1.0",
-    "wickra-feature-store-win32-x64-msvc": "0.1.0",
-    "wickra-feature-store-win32-arm64-msvc": "0.1.0"
+    "wickra-feature-store-darwin-x64": "0.1.0",
+    "wickra-feature-store-linux-arm64-gnu": "0.1.0",
+    "wickra-feature-store-linux-x64-gnu": "0.1.0",
+    "wickra-feature-store-win32-arm64-msvc": "0.1.0",
+    "wickra-feature-store-win32-x64-msvc": "0.1.0"
   },
   "scripts": {
     "build": "napi build --platform --release",
@@ -63,5 +63,8 @@
   },
   "devDependencies": {
     "@napi-rs/cli": "^3.7.4"
+  },
+  "dependencies": {
+    "js-yaml": "^4.3.2"
   }
 }
