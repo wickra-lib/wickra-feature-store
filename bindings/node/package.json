@@ -63,8 +63,5 @@
   },
   "devDependencies": {
     "@napi-rs/cli": "^3.9.0"
-  },
-  "dependencies": {
-    "js-yaml": "^4.3.2"
   }
 }

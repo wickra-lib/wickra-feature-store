@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **`js-yaml` was a runtime dependency of the published npm package.** It was
+  added to `dependencies` to force the transitive copy off 4.3.0, the version
+  osv-scanner flagged -- but `dependencies` is what every consumer of
+  `wickra-feature-store` installs, and nothing in the binding imports it. The
+  six sibling packages declare no runtime dependency at all. It is gone; the
+  same 4.3.2 now arrives dev-only through `@napi-rs/cli`, which is where the
+  other six get it.
+
 - **The C++ example now goes through the C++ hull.** It called the C functions
   directly and rebuilt the two-call length protocol by hand -- the very thing
   `wickra_feature_store.hpp` exists to remove -- which left the shipped C++
