@@ -32,5 +32,5 @@ on the loader path — `PATH` on Windows, `LD_LIBRARY_PATH` on Linux,
 `DYLD_LIBRARY_PATH` on macOS — or beside the assembly, where the bundled
 resolver finds it.
 
-Licensed under either of [MIT](../../LICENSE-MIT) or
-[Apache-2.0](../../LICENSE-APACHE) at your option.
+Licensed under either of [MIT](https://github.com/wickra-lib/wickra-feature-store/blob/main/LICENSE-MIT) or
+[Apache-2.0](https://github.com/wickra-lib/wickra-feature-store/blob/main/LICENSE-APACHE) at your option.
