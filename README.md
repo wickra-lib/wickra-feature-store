@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://wickra.org"><img src="https://raw.githubusercontent.com/wickra-lib/.github/main/profile/wickra-banner.webp?v=514" alt="Wickra Feature Store — turn OHLCV and microstructure event streams into ML-ready feature matrices over 514 streaming indicators, deterministic across ten languages" width="100%"></a>
+  <a href="https://wickra.org"><img src="https://raw.githubusercontent.com/wickra-lib/.github/main/profile/wickra-banner.webp?v=514" alt="Wickra Feature Store — turn OHLCV and microstructure event streams into ML-ready feature matrices over 497 streaming indicators, deterministic across ten languages" width="100%"></a>
 </p>
 
 [![Built on Wickra](https://img.shields.io/badge/built%20on-wickra-3b82f6)](https://github.com/wickra-lib/wickra)
@@ -114,7 +114,7 @@ produces columns `["Sma(10)", "Rsi(14)", "Macd(12,26,9).hist", "price.close", "f
 ## Features and labels
 
 - **Features** are `indicator`, `price` or `microstructure` columns — see
-  [docs/FEATURES.md](docs/FEATURES.md). Any of Wickra's 514 streaming indicators
+  [docs/FEATURES.md](docs/FEATURES.md). Any of the 497 streaming indicators
   is available by its registry name (`Sma`, `Ema`, `Rsi`, `Macd`, …).
 - **Labels** are `forward_return` (arithmetic or log) or `triple_barrier`
   (`+1 / -1 / 0`) — see [docs/LABELS.md](docs/LABELS.md). Look-ahead cells with no

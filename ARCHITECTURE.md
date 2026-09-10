@@ -3,7 +3,7 @@
 `wickra-feature-store` is one data-driven core with many thin consumers. A
 feature build is a piece of **data** — a serde `FeatureSpec` — that is folded over
 each symbol's history with the [Wickra](https://github.com/wickra-lib/wickra)
-library of 514 O(1) streaming indicators, emitting one row per bar into a
+library of 497 name-resolvable O(1) streaming indicators, emitting one row per bar into a
 `FeatureMatrix`. Because the spec is data, not code, the exact same build runs
 natively, across the C ABI and in WASM, byte-for-byte identical.
 
@@ -76,7 +76,7 @@ paths by construction:
 No indicator mathematics lives in this repository. `SymbolState` builds an
 `IndicatorSet` that resolves each feature from the `wickra-core` registry by name
 and parameters (the same resolver the backtester uses), so the feature store
-inherits all 514 indicators and any future additions for free. `price` columns
+inherits all 497 indicators and any future additions for free. `price` columns
 read straight from the candle; `microstructure` metrics resolve from the same
 registry's microstructure namespace.
 
