@@ -8,7 +8,7 @@ mod common;
 
 use std::fs;
 
-use feature_store_core::build_series;
+use wickra_feature_store_core::build_series;
 
 #[test]
 fn every_spec_matches_its_golden_bytes() {
@@ -32,7 +32,7 @@ fn every_spec_matches_its_golden_bytes() {
 }
 
 /// Re-bless the goldens from the current engine. Ignored by default; run with
-/// `cargo test -p feature-store-core --test golden -- --ignored bless` to write
+/// `cargo test -p wickra-feature-store-core --test golden -- --ignored bless` to write
 /// every `golden/expected/<spec>.json` from the live output.
 #[test]
 #[ignore = "writes golden fixtures; run explicitly to re-bless"]

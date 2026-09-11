@@ -12,7 +12,7 @@ mod common;
 use std::collections::BTreeMap;
 use std::fs;
 
-use feature_store_core::{build_series, FeatureStore, PushFeeds, SymbolSeries};
+use wickra_feature_store_core::{build_series, FeatureStore, PushFeeds, SymbolSeries};
 
 /// Push a whole symbol series bar by bar, carrying each bar's side feeds.
 fn push_series(store: &mut FeatureStore, symbol: &str, series: &SymbolSeries) {

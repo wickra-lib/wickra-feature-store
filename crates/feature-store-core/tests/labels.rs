@@ -3,7 +3,7 @@
 //! (up-hit, down-hit, the down-wins tie, and the no-touch zero), plus the
 //! not-enough-future `NaN` guard.
 
-use feature_store_core::{forward_return, triple_barrier};
+use wickra_feature_store_core::{forward_return, triple_barrier};
 
 const EPS: f64 = 1e-12;
 

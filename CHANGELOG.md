@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **The core crate carried a name the release could not upload.**
+  `feature-store-core` is outside the org's crates.io token scope, which
+  creates new crates under the `wickra-` prefix only; `cargo publish` on it
+  returns 403 at upload while `--dry-run` passes, and because the publish jobs
+  run in parallel the release would have landed on PyPI, npm, NuGet, Maven
+  Central and the Go mirror without ever reaching crates.io. The core is now
+  `wickra-feature-store-core`, the shape of every released sibling. The
+  directory keeps its name; only the package and the
+  `wickra_feature_store_core` path moved. The same audit ran across the family
+  (xray paid for this with its first tag).
+
 - **The napi bump split a crate in two and the build stopped.**
   `napi-derive-backend` 6.1.3 pulls `convert_case` 0.12 while `napi-derive`
   3.6.3 still uses 0.11, and two versions of a crate are two unrelated types --
@@ -183,7 +194,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`clippy.toml`), `repo-metadata.toml`, governance docs, the `.github` tree
   (issue/PR templates, `setup-rust`, `sync-metadata.py`, dependabot), and dual
   `MIT OR Apache-2.0` licensing.
-- `feature-store-core`: the data-driven core. A serde `FeatureSpec` (indicator /
+- `wickra-feature-store-core`: the data-driven core. A serde `FeatureSpec` (indicator /
   price / microstructure features, forward-return / triple-barrier labels,
   optional z-score / min-max scaling, warmup and trailing-window policies) is
   folded over each symbol's history into a deterministic `FeatureMatrix`, in

@@ -13,7 +13,7 @@
 
 use wasm_bindgen::prelude::*;
 
-use feature_store_core::FeatureStore as CoreFeatureStore;
+use wickra_feature_store_core::FeatureStore as CoreFeatureStore;
 
 /// A feature store driven by JSON commands.
 #[wasm_bindgen]

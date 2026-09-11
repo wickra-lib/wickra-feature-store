@@ -74,7 +74,7 @@ Goldens are produced by the core, never hand-edited. When you deliberately chang
 behaviour, regenerate them:
 
 ```bash
-cargo test -p feature-store-core golden -- --ignored --nocapture
+cargo test -p wickra-feature-store-core golden -- --ignored --nocapture
 git add golden/ && git commit -m "bless feature-store goldens"
 ```
 

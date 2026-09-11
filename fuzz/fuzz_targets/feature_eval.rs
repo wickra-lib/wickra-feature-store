@@ -4,7 +4,7 @@
 //! must never panic, and a parsed value's key must be deterministic and
 //! round-trip-stable.
 
-use feature_store_core::{Feature, Label};
+use wickra_feature_store_core::{Feature, Label};
 use libfuzzer_sys::fuzz_target;
 
 fuzz_target!(|data: &[u8]| {

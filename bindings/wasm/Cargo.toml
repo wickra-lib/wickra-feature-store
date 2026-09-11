@@ -29,7 +29,7 @@ workspace = true
 # inherited workspace dependency. Default features off means no rayon (the WASM
 # sequential fold) and no arrow (columnar output is native-only), so a wasm build
 # is byte-identical to the native one — the exact cross-language golden check.
-feature-store-core = { path = "../../crates/feature-store-core", version = "0.1.0", default-features = false }
+wickra-feature-store-core = { path = "../../crates/feature-store-core", version = "0.1.0", default-features = false }
 wasm-bindgen = "0.2"
 
 # The backtester's seeded RNG (via `rand`) pulls in `getrandom`, which needs its

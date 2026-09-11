@@ -8,8 +8,8 @@
 mod common;
 
 use arrow::array::{Array, Float64Array, Int64Array, StringArray};
-use feature_store_core::{arrow_out, build_series, FeatureMatrix};
 use parquet::arrow::arrow_reader::ParquetRecordBatchReaderBuilder;
+use wickra_feature_store_core::{arrow_out, build_series, FeatureMatrix};
 
 /// Read every row group of a Parquet file back into a single flat table:
 /// symbols, timestamps, and one `Vec<f64>` per data column.

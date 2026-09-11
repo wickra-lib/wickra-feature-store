@@ -75,7 +75,7 @@ done
 `--data golden/data` path over the CSV directory produces the identical matrix.
 
 The `golden.rs` conformance test re-runs the same corpus through
-`feature-store-core` and asserts each `expected/<name>.json` byte-for-byte, so a
+`wickra-feature-store-core` and asserts each `expected/<name>.json` byte-for-byte, so a
 diff in CI means the engine's output changed and the goldens must be re-blessed
 deliberately.
 

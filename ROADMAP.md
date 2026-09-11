@@ -8,7 +8,7 @@ CI-green pull requests. Status below is updated as phases complete.
 
 0. **Scaffold** — workspace, governance, supply-chain config, `.github`
    scaffolding. *In progress.*
-1. **`feature-store-core`** — the `FeatureSpec`, the per-symbol
+1. **`wickra-feature-store-core`** — the `FeatureSpec`, the per-symbol
    `SymbolState` fold, the `FeatureMatrix`, and the `build` / `build_batch`
    entry points, with near-total coverage via inline tests.
 2. **`feature-store-cli`** — the reference `wickra-feature-store` binary: load a spec and a

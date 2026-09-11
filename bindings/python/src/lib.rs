@@ -12,7 +12,7 @@
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 
-use feature_store_core::FeatureStore;
+use wickra_feature_store_core::FeatureStore;
 
 /// A feature store driven by JSON commands.
 ///

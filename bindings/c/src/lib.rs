@@ -27,7 +27,7 @@ use core::ffi::{c_char, CStr};
 use std::panic::{catch_unwind, AssertUnwindSafe};
 use std::ptr;
 
-use feature_store_core::FeatureStore;
+use wickra_feature_store_core::FeatureStore;
 
 /// A required pointer argument (`handle` or `cmd_json`) was null.
 pub const WICKRA_FEATURE_STORE_ERR_NULL: i32 = -1;

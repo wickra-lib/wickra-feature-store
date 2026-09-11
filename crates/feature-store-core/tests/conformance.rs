@@ -5,11 +5,11 @@
 
 use std::collections::BTreeMap;
 
-use feature_store_core::{
+use serde_json::json;
+use wickra_feature_store_core::{
     build, Candle, Error, Feature, FeatureSpec, Label, OutputFormat, PriceField, Scaling,
     SymbolInput, WarmupPolicy,
 };
-use serde_json::json;
 
 /// A value round-trips iff serializing it yields the pinned JSON and parsing that
 /// JSON yields an equal value.

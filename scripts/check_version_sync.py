@@ -19,7 +19,7 @@ The cost of an explicit list is that a missing entry is silent rather than wrong
 releases that way, with its Java benchmarks pom sitting at 0.1.0 while everything
 else moved. So this list was derived by grepping the tree for the current version
 and classifying every hit, not by copying the sibling repository's list: this
-repository pins `feature-store-core` from three manifests rather than one, ships the
+repository pins `wickra-feature-store-core` from three manifests rather than one, ships the
 C# csproj a directory deeper, has no Java example pom, and prints its version in
 `examples/README.md`.
 
@@ -38,21 +38,21 @@ ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 # (path, description, pattern with @V@ standing in for the version, expected count)
 TOUCHPOINTS: list[tuple[str, str, str, int]] = [
     ("Cargo.toml", "workspace version", r'(?m)^version = "@V@"$', 1),
-    ("Cargo.toml", "workspace dependency pin", r'feature-store-core = \{ version = "@V@", path = ', 1),
-    # Two manifests pin feature-store-core by path *and* version instead of through
+    ("Cargo.toml", "workspace dependency pin", r'wickra-feature-store-core = \{ version = "@V@", path = ', 1),
+    # Two manifests pin wickra-feature-store-core by path *and* version instead of through
     # the workspace: the wasm binding and the bench crate both want
     # `default-features = false`, which a `workspace = true` entry cannot add.
     # They are the entries a bump forgets, because they do not look like version
     # declarations -- they look like dependency lines.
     (
         "bindings/wasm/Cargo.toml",
-        "feature-store-core pin",
+        "wickra-feature-store-core pin",
         r'path = "\.\./\.\./crates/feature-store-core", version = "@V@"',
         1,
     ),
     (
         "crates/feature-store-bench/Cargo.toml",
-        "feature-store-core pin",
+        "wickra-feature-store-core pin",
         r'path = "\.\./feature-store-core", version = "@V@"',
         1,
     ),

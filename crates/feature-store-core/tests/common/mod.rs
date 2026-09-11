@@ -9,7 +9,7 @@ use std::collections::BTreeMap;
 use std::fs;
 use std::path::PathBuf;
 
-use feature_store_core::{Candle, FeatureSpec, SymbolInput, SymbolInputDoc, SymbolSeries};
+use wickra_feature_store_core::{Candle, FeatureSpec, SymbolInput, SymbolInputDoc, SymbolSeries};
 
 /// The repo-root `golden/` directory, resolved from this crate's manifest dir.
 #[must_use]
