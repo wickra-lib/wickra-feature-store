@@ -3,10 +3,10 @@
 //! when built with the `arrow` feature — the columnar path must write a readable
 //! file.
 
-use feature_store_core::{build, Candle, FeatureSpec, SymbolInput};
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 use std::process::Command;
+use wickra_feature_store_core::{build, Candle, FeatureSpec, SymbolInput};
 
 const SPEC: &str = r#"{ "universe": ["AAA"],
   "features": [ {"kind":"indicator","name":"Sma","params":[2]}, {"kind":"price","field":"close"} ],

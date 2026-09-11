@@ -40,4 +40,4 @@ similar_names = "allow"
 [dependencies]
 # The core, without the native `arrow` columnar feature — Parquet is a file
 # format and never crosses the JSON-over-C-ABI boundary.
-feature-store-core = { workspace = true, default-features = false }
+wickra-feature-store-core = { workspace = true, default-features = false }

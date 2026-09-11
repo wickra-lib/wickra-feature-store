@@ -4,7 +4,7 @@
 //! successfully parsed spec re-serializes and re-parses to an equal value, and
 //! `validate` never panics.
 
-use feature_store_core::FeatureSpec;
+use wickra_feature_store_core::FeatureSpec;
 use libfuzzer_sys::fuzz_target;
 
 fuzz_target!(|data: &[u8]| {

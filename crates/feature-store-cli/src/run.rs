@@ -1,12 +1,12 @@
 //! Load the spec and universe, build the feature matrix, and emit it.
 
 use crate::args::{Args, Format};
-use feature_store_core::{
-    build_series, Candle, FeatureSpec, OutputFormat, SymbolInputDoc, SymbolSeries,
-};
 use std::collections::BTreeMap;
 use std::io::Read as _;
 use std::path::Path;
+use wickra_feature_store_core::{
+    build_series, Candle, FeatureSpec, OutputFormat, SymbolInputDoc, SymbolSeries,
+};
 
 /// Load the inputs, build the matrix and write the output where requested.
 ///
@@ -175,15 +175,14 @@ fn emit_text(text: &str, out: Option<&Path>) -> Result<(), String> {
 /// the crate is built with the `arrow` feature.
 #[cfg(feature = "arrow")]
 fn write_columnar(
-    matrix: &feature_store_core::FeatureMatrix,
+    matrix: &wickra_feature_store_core::FeatureMatrix,
     format: OutputFormat,
     out: Option<&Path>,
 ) -> Result<(), String> {
     let path = out.ok_or("--out is required for arrow/parquet output")?;
     match format {
-        OutputFormat::Parquet => {
-            feature_store_core::arrow_out::write_parquet(matrix, path).map_err(|e| e.to_string())
-        }
+        OutputFormat::Parquet => wickra_feature_store_core::arrow_out::write_parquet(matrix, path)
+            .map_err(|e| e.to_string()),
         OutputFormat::Arrow => write_arrow_ipc(matrix, path),
         OutputFormat::Json | OutputFormat::Csv => unreachable!("text formats handled by caller"),
     }
@@ -191,7 +190,7 @@ fn write_columnar(
 
 #[cfg(not(feature = "arrow"))]
 fn write_columnar(
-    _matrix: &feature_store_core::FeatureMatrix,
+    _matrix: &wickra_feature_store_core::FeatureMatrix,
     _format: OutputFormat,
     _out: Option<&Path>,
 ) -> Result<(), String> {
@@ -200,10 +199,14 @@ fn write_columnar(
 
 /// Write the matrix as an Arrow IPC file.
 #[cfg(feature = "arrow")]
-fn write_arrow_ipc(matrix: &feature_store_core::FeatureMatrix, path: &Path) -> Result<(), String> {
+fn write_arrow_ipc(
+    matrix: &wickra_feature_store_core::FeatureMatrix,
+    path: &Path,
+) -> Result<(), String> {
     use arrow::ipc::writer::FileWriter;
 
-    let batch = feature_store_core::arrow_out::to_arrow(matrix).map_err(|e| e.to_string())?;
+    let batch =
+        wickra_feature_store_core::arrow_out::to_arrow(matrix).map_err(|e| e.to_string())?;
     let file =
         std::fs::File::create(path).map_err(|e| format!("create {}: {e}", path.display()))?;
     let mut writer = FileWriter::try_new(file, &batch.schema()).map_err(|e| e.to_string())?;
@@ -215,7 +218,7 @@ fn write_arrow_ipc(matrix: &feature_store_core::FeatureMatrix, path: &Path) -> R
 #[cfg(test)]
 mod tests {
     use super::*;
-    use feature_store_core::CandleInput;
+    use wickra_feature_store_core::CandleInput;
 
     #[test]
     fn parses_csv_with_a_header() {

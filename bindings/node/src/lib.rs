@@ -8,7 +8,7 @@ use napi_derive::napi;
 
 /// A feature store driven by JSON commands.
 #[napi]
-pub struct FeatureStore(feature_store_core::FeatureStore);
+pub struct FeatureStore(wickra_feature_store_core::FeatureStore);
 
 #[napi]
 impl FeatureStore {
@@ -16,7 +16,7 @@ impl FeatureStore {
     #[napi(constructor)]
     #[allow(clippy::needless_pass_by_value)]
     pub fn new(spec_json: String) -> napi::Result<Self> {
-        feature_store_core::FeatureStore::new(&spec_json)
+        wickra_feature_store_core::FeatureStore::new(&spec_json)
             .map(FeatureStore)
             .map_err(|e| napi::Error::from_reason(e.to_string()))
     }
@@ -33,6 +33,6 @@ impl FeatureStore {
     /// The crate version.
     #[napi]
     pub fn version(&self) -> &'static str {
-        feature_store_core::FeatureStore::version()
+        wickra_feature_store_core::FeatureStore::version()
     }
 }

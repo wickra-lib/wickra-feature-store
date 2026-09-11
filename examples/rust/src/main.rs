@@ -7,7 +7,7 @@
 
 use std::collections::BTreeMap;
 
-use feature_store_core::{build, Candle, FeatureSpec};
+use wickra_feature_store_core::{build, Candle, FeatureSpec};
 
 const SPEC: &str = r#"{
     "universe": ["AAA", "BBB"],
@@ -46,7 +46,10 @@ fn main() {
 
     let matrix = build(&data, &spec).expect("build feature matrix");
 
-    println!("wickra-feature-store {}", feature_store_core::version());
+    println!(
+        "wickra-feature-store {}",
+        wickra_feature_store_core::version()
+    );
     println!("columns: {:?}", matrix.columns);
     println!("rows: {}", matrix.rows);
     println!("{}", matrix.to_json());

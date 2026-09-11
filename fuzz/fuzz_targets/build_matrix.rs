@@ -5,7 +5,7 @@
 
 use std::collections::BTreeMap;
 
-use feature_store_core::{build, Candle, FeatureSpec};
+use wickra_feature_store_core::{build, Candle, FeatureSpec};
 use libfuzzer_sys::fuzz_target;
 
 const SPEC: &str = r#"{

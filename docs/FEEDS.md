@@ -11,7 +11,7 @@ Related: [FEATURES.md](FEATURES.md) names a feature column and its parameters;
 
 ## The seven feed families
 
-`feature_store_core::feed_kind(name)` reports which family an indicator belongs
+`wickra_feature_store_core::feed_kind(name)` reports which family an indicator belongs
 to, for a registry name or a microstructure metric alike — they resolve through
 the same registry, so they are checked the same way.
 

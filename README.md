@@ -30,7 +30,7 @@
 
 > **Part of the [Wickra ecosystem](https://github.com/wickra-lib):** the same data-driven core and ten-language binding surface also power [wickra-exchange](https://github.com/wickra-lib/wickra-exchange), [wickra-backtest](https://github.com/wickra-lib/wickra-backtest), [wickra-terminal](https://github.com/wickra-lib/wickra-terminal) and 20 more — see [the full list](https://github.com/wickra-lib).
 
-Wickra Feature Store is one data-driven core, `feature-store-core`: a serde
+Wickra Feature Store is one data-driven core, `wickra-feature-store-core`: a serde
 **`FeatureSpec`** is folded over each symbol's history with the
 [Wickra](https://github.com/wickra-lib/wickra) indicator library — 497 of them
 resolvable by name — emitting one **feature row per bar**, joining forward-looking
@@ -48,7 +48,7 @@ and R**, so a developer in any language builds the same features.
 - **Side feeds** — a column whose indicator reads a reference series, a derivatives tick, an order book, the bar's trades or the market cross-section gets it, or the spec is refused by name.
 
 ```rust
-use feature_store_core::{build, FeatureSpec, SymbolInput};
+use wickra_feature_store_core::{build, FeatureSpec, SymbolInput};
 use std::collections::BTreeMap;
 
 let spec: FeatureSpec = serde_json::from_str(r#"{

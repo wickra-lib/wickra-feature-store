@@ -9,11 +9,11 @@
 
 use std::collections::BTreeMap;
 
-use feature_store_core::{
-    build_series, Candle, Error, Feature, FeatureSpec, PriceField, SymbolSeries, WarmupPolicy,
-};
 use wickra_backtest_core::{CrossSection, CrossSectionMember, DerivativesTick, Level, OrderBook};
 use wickra_backtest_core::{TradePrint, TradeSide};
+use wickra_feature_store_core::{
+    build_series, Candle, Error, Feature, FeatureSpec, PriceField, SymbolSeries, WarmupPolicy,
+};
 
 const SYMBOL: &str = "AAA";
 const BARS: usize = 120;
@@ -203,7 +203,7 @@ fn spec_for(name: &str, params: Vec<f64>) -> FeatureSpec {
         ],
         labels: Vec::new(),
         window: None,
-        output: feature_store_core::OutputFormat::Json,
+        output: wickra_feature_store_core::OutputFormat::Json,
         scaling: None,
         warmup: WarmupPolicy::Nan,
     }

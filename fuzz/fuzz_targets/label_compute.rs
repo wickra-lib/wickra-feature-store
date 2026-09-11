@@ -4,7 +4,7 @@
 //! the inputs, the functions must never panic or index out of bounds — an
 //! out-of-range request returns `NaN`, never a crash.
 
-use feature_store_core::{forward_return, triple_barrier};
+use wickra_feature_store_core::{forward_return, triple_barrier};
 use libfuzzer_sys::fuzz_target;
 
 fuzz_target!(|data: &[u8]| {

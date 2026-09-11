@@ -740,23 +740,7 @@ name = "feature-store-bench"
 version = "0.1.0"
 dependencies = [
  "codspeed-criterion-compat",
- "feature-store-core",
-]
-
-[[package]]
-name = "feature-store-core"
-version = "0.1.0"
-dependencies = [
- "arrow",
- "parquet",
- "proptest",
- "rayon",
- "serde",
- "serde_json",
- "thiserror",
- "toml",
- "wickra-backtest-core",
- "wickra-core",
+ "wickra-feature-store-core",
 ]
 
 [[package]]
@@ -2050,51 +2034,67 @@ version = "0.1.0"
 dependencies = [
  "arrow",
  "clap",
- "feature-store-core",
  "serde",
  "serde_json",
+ "wickra-feature-store-core",
 ]
 
 [[package]]
 name = "wickra-feature-store-c"
 version = "0.1.0"
 dependencies = [
- "feature-store-core",
+ "wickra-feature-store-core",
+]
+
+[[package]]
+name = "wickra-feature-store-core"
+version = "0.1.0"
+dependencies = [
+ "arrow",
+ "parquet",
+ "proptest",
+ "rayon",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "toml",
+ "wickra-backtest-core",
+ "wickra-core",
 ]
 
 [[package]]
 name = "wickra-feature-store-example"
 version = "0.1.0"
 dependencies = [
- "feature-store-core",
  "serde_json",
+ "wickra-feature-store-core",
 ]
 
 [[package]]
 name = "wickra-feature-store-node"
 version = "0.1.0"
 dependencies = [
- "feature-store-core",
  "napi",
  "napi-build",
  "napi-derive",
+ "wickra-feature-store-core",
 ]
 
 [[package]]
 name = "wickra-feature-store-python"
 version = "0.1.0"
 dependencies = [
- "feature-store-core",
  "pyo3",
+ "wickra-feature-store-core",
 ]
 
 [[package]]
 name = "wickra-feature-store-wasm"
 version = "0.1.0"
 dependencies = [
- "feature-store-core",
  "getrandom 0.2.17",
  "wasm-bindgen",
+ "wickra-feature-store-core",
 ]
 
 [[package]]

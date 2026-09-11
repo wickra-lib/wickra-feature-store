@@ -1,7 +1,7 @@
 # Wickra Feature Store — C ABI
 
 The C ABI is the hub every C-capable language (C, C++, C#, Go, Java, R) links
-against. It exposes `feature-store-core` as a tiny, JSON-shaped surface built as
+against. It exposes `wickra-feature-store-core` as a tiny, JSON-shaped surface built as
 both a `cdylib` (dynamic library) and a `staticlib`.
 
 ## Surface

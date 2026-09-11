@@ -5,10 +5,10 @@
 
 use std::collections::BTreeMap;
 
-use feature_store_core::{
+use proptest::prelude::*;
+use wickra_feature_store_core::{
     build, Candle, Feature, FeatureSpec, Label, PriceField, Scaling, SymbolInput, WarmupPolicy,
 };
-use proptest::prelude::*;
 
 /// A candle path derived from a base price so OHLC is always finite and ordered.
 fn candles_strategy() -> impl Strategy<Value = Vec<Candle>> {
@@ -98,7 +98,7 @@ prop_compose! {
             features,
             labels,
             window,
-            output: feature_store_core::OutputFormat::Json,
+            output: wickra_feature_store_core::OutputFormat::Json,
             scaling,
             warmup,
         }

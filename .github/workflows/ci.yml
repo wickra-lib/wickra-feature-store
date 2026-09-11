@@ -465,11 +465,11 @@ jobs:
         uses: taiki-e/install-action@e67fa11c4b9316fa714ddf0abed07a0c3143b95b # v2.87.4
         with:
           tool: cargo-llvm-cov
-      # The determinism moat lives in feature-store-core: the fold, the label
+      # The determinism moat lives in wickra-feature-store-core: the fold, the label
       # formulas, canonical serialization and scaling. Measure it in isolation so
       # patch coverage tracks the core.
       - name: Generate coverage (lcov)
-        run: cargo llvm-cov -p feature-store-core --all-features --lcov --output-path lcov.info
+        run: cargo llvm-cov -p wickra-feature-store-core --all-features --lcov --output-path lcov.info
       - name: Upload to Codecov
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
@@ -608,7 +608,7 @@ jobs:
         run: |
           set -euo pipefail
           published=()
-          for crate in feature-store-core wickra-feature-store; do
+          for crate in wickra-feature-store-core wickra-feature-store; do
             code=$(curl -sS -o /dev/null -w "%{http_code}" \
               -H "User-Agent: wickra-feature-store-ci" \
               "https://crates.io/api/v1/crates/$crate")

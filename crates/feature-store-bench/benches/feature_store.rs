@@ -12,7 +12,7 @@ use std::collections::BTreeMap;
 use std::fmt::Write as _;
 
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion, Throughput};
-use feature_store_core::{build, Candle, FeatureSpec, SymbolInput};
+use wickra_feature_store_core::{build, Candle, FeatureSpec, SymbolInput};
 
 const BARS: usize = 200;
 

@@ -1,6 +1,6 @@
 /* Streaming equals batch, through the C ABI's two-call idiom.
  *
- * feature-store-core proves this in Rust, but that says nothing about the
+ * wickra-feature-store-core proves this in Rust, but that says nothing about the
  * boundary a C caller crosses. Every reach behind this ABI asks for the
  * response length first and reads it second, so a command that is not a pure
  * function of its payload runs twice per call — and `push` is exactly that: it
