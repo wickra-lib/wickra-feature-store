@@ -11,8 +11,6 @@ picking the right dataset is part of speaking the protocol correctly.
 import json
 import pathlib
 
-import pytest
-
 from wickra_feature_store import FeatureStore
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
@@ -26,9 +24,18 @@ def _spec_files() -> list[pathlib.Path]:
     return sorted(specs.glob("*.json"))
 
 
-@pytest.mark.skipif(not GOLDEN.exists(), reason="golden fixtures not present yet")
-@pytest.mark.parametrize("spec_path", _spec_files())
-def test_golden_build_is_byte_identical(spec_path: pathlib.Path) -> None:
+def test_golden_builds_are_byte_identical() -> None:
+    # One function over every case rather than a parametrized test: this
+    # module also runs on the Python 3.9 row, which has no test framework
+    # installed (see run_without_pytest.py). A missing corpus is a failure,
+    # not a skip.
+    specs = _spec_files()
+    assert specs, "golden corpus not found"
+    for spec_path in specs:
+        _check_case(spec_path)
+
+
+def _check_case(spec_path: pathlib.Path) -> None:
     source = "data-feeds.json" if spec_path.stem.startswith("feeds_") else "data.json"
     dataset = json.loads((GOLDEN / source).read_text(encoding="utf-8"))
     expected = (GOLDEN / "expected" / f"{spec_path.stem}.json").read_text(
@@ -36,4 +43,4 @@ def test_golden_build_is_byte_identical(spec_path: pathlib.Path) -> None:
     )
     store = FeatureStore(spec_path.read_text(encoding="utf-8"))
     response = store.command(json.dumps({"cmd": "build_batch", "data": dataset}))
-    assert response == expected.strip()
+    assert response == expected.strip(), spec_path.stem
