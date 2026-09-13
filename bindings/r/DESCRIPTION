@@ -14,4 +14,4 @@ Encoding: UTF-8
 NeedsCompilation: yes
 SystemRequirements: the wickra-feature-store C ABI shared library (WKFEATURESTORE_LIB)
     and its header (WKFEATURESTORE_INC).
-RoxygenNote: 7.3.2
+Config/roxygen2/version: 8.0.0
