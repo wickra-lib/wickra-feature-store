@@ -1,7 +1,6 @@
-# Generated into src/Makevars by ../configure (the @WKFEATURESTORE_RPATH@ token is
+# Generated into src/Makevars by ../configure (the @WICKRA_RPATH@ token is
 # substituted per-OS: $ORIGIN on Linux, @loader_path on macOS). The C ABI header
-# (wickra_feature_store.h) and shared library (libwickra_feature_store.so/.dylib) are
-# staged into src/ by configure, so the package object links against the bundled
-# library rather than against whatever happens to be on the system.
+# (wickra_feature-store.h) and shared library (libwickra_feature-store.so/.dylib) are staged into src/ by
+# configure, so the package object links against the bundled lib.
 PKG_CPPFLAGS = -I.
-PKG_LIBS = -L. -lwickra_feature_store @WKFEATURESTORE_RPATH@
+PKG_LIBS = -L. -lwickra_feature-store @WICKRA_RPATH@
