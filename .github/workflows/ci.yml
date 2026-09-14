@@ -195,7 +195,8 @@ jobs:
       # Hash-locked rather than unpinned names: an unpinned `pip install` is a
       # fetch of whatever the index serves that minute, which is exactly what
       # the locked file exists to prevent. 3.9 resolves separately because
-      # pytest and iniconfig have both dropped it.
+      # the wheels have to exist for the interpreter that installs them, and it
+      # carries no pytest (see ci-dev-py39.in).
       - name: Install the locked build/test tooling
         shell: bash
         run: |
@@ -208,7 +209,18 @@ jobs:
       - run: maturin build --out dist
         working-directory: bindings/python
       - run: pip install --no-index --find-links bindings/python/dist wickra-feature-store
-      - run: pytest bindings/python/tests -q
+      # 3.10 and up run the suite under pytest. The 3.9 row cannot: pytest 9.x
+      # requires 3.10, so pinning it there would mean carrying a version below
+      # the fix for GHSA-6w46-j5rx-g56g with no backport. It runs the same
+      # modules through run_without_pytest.py -- plain functions, plain asserts.
+      - name: Test the binding
+        shell: bash
+        run: |
+          if [ "${{ matrix.python-version }}" = "3.9" ]; then
+            python bindings/python/tests/run_without_pytest.py
+          else
+            pytest bindings/python/tests -q
+          fi
 
   node:
     name: Node ${{ matrix.node-version }} on ${{ matrix.os }}
