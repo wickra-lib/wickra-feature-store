@@ -56,3 +56,10 @@ secrets/
 # Feature store output artifacts.
 *.parquet
 *.arrow
+# Staged into src/ by configure at build time; never committed.
+bindings/r/src/wickra_feature_store.h
+bindings/r/src/libwickra_feature_store*
+bindings/r/src/wickra_feature_store_abi.def
+bindings/r/src/wickra-feature-store-c*
+bindings/r/src/Makevars
+bindings/r/src/symbols.rds
