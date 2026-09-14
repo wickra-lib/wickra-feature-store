@@ -67,9 +67,9 @@ println!("{}", matrix.to_json());
 
 ## Status
 
-Early development (0.1.0, unreleased). The API is settling ahead of the first
-tagged release; the matrix format and command protocol are stable and pinned by
-[golden tests](golden/).
+Early development (0.1.0). The API is settling; the matrix format and command
+protocol are stable and pinned by [golden tests](golden/). 0.1.0 is the first
+published release.
 
 ## Documentation
 
