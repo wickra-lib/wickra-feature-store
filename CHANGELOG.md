@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-09-14
+
 ### Fixed
 
 - **CI is green again.** The napi glue (`bindings/node/index.js`) was stale
@@ -243,4 +245,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documentation: `docs/FEATURES.md`, `LABELS.md`, `SCALING.md`, `STREAMING.md`,
   `OUTPUT_FORMATS.md` and `Cookbook.md`.
 
-[Unreleased]: https://github.com/wickra-lib/wickra-feature-store/commits/main
+[Unreleased]: https://github.com/wickra-lib/wickra-feature-store/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/wickra-lib/wickra-feature-store/releases/tag/v0.1.0
