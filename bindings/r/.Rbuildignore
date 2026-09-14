@@ -14,7 +14,7 @@
 ^src/wickra-feature-store-c$
 ^src/Makevars$
 ^src/.*\.o$
-^src/wickrafeaturestore.(dll|so|dylib)$
+^src/wickrafeaturestore\.(dll|so|dylib)$
 ^src/symbols\.rds$
 ^src/dlltool\.log$
 ^\.gitignore$
