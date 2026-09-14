@@ -5,16 +5,16 @@
 # override, so none of these belong in the distributable. src/Makevars.win is
 # not staged: it is the Windows link line and ships with the package. Without
 # it the Windows build links no import library at all.
-^src/wickra_feature-store\.h$
-^src/wickra_feature-store_abi\.dll$
-^src/wickra_feature-store_abi\.def$
-^src/libwickra_feature-store_abi\.dll\.a$
-^src/libwickra_feature-store\.(so|dylib|a)$
+^src/wickra_feature_store\.h$
+^src/wickra_feature_store_abi\.dll$
+^src/wickra_feature_store_abi\.def$
+^src/libwickra_feature_store_abi\.dll\.a$
+^src/libwickra_feature_store\.(so|dylib|a)$
 ^src/wickra-feature-store-c\.tar\.gz$
 ^src/wickra-feature-store-c$
 ^src/Makevars$
 ^src/.*\.o$
-^src/wickrafeature-store\.(dll|so|dylib)$
+^src/wickrafeaturestore.(dll|so|dylib)$
 ^src/symbols\.rds$
 ^src/dlltool\.log$
 ^\.gitignore$

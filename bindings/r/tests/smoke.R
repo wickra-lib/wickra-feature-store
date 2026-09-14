@@ -7,7 +7,7 @@
 # from the tarball by .Rbuildignore and run from the repository by CI. That one
 # needs golden/ above it; this one needs nothing.
 
-library(wickrafeature-store)
+library(wickrafeaturestore)
 
 v <- wkfeaturestore_version()
 stopifnot(is.character(v), length(v) == 1L, nzchar(v))

@@ -1,5 +1,5 @@
 # Link the import library configure.win builds -- it references
-# wickra_feature-store_abi.dll, not the package's own DLL. The C ABI header is staged into
+# wickra_feature_store_abi.dll, not the package's own DLL. The C ABI header is staged into
 # src/ by configure.win, so the include path is the source directory itself.
 PKG_CPPFLAGS = -I.
-PKG_LIBS = libwickra_feature-store_abi.dll.a
+PKG_LIBS = libwickra_feature_store_abi.dll.a
