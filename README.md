@@ -198,7 +198,7 @@ ten surfaces stayed in step.
 - **Node 22+** — the Node binding.
 - **Go 1.23+** — the Go binding.
 - **Java 22+** — the Java binding.
-- **R 2.10+** — the R package.
+- **R 4.1+** — the R package.
 
 Per-language toolchains are only needed to build that language's binding — see
 its `README.md`.
