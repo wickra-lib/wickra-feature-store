@@ -56,7 +56,7 @@ volume   = fixed per symbol
 | sym-05 | 75   | 6   | 8.0 | 0.15  | 600    |
 | sym-06 | 120  | 12  | 4.5 | 0.02  | 2000   |
 
-## Regenerating (never by hand)
+## Blessing
 
 Re-bless every `expected/<name>.json` from the current engine with the CLI. The
 `--stdin` path folds `data.json` through the exact same `build()` call as every
