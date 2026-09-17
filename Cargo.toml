@@ -19,7 +19,7 @@ members = ["crates/feature-store-core", "crates/feature-store-cli", "crates/feat
 exclude = ["fuzz"]
 
 [workspace.package]
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 rust-version = "1.86"
 license = "MIT OR Apache-2.0"
@@ -33,7 +33,7 @@ categories = ["finance", "command-line-utilities"]
 [workspace.dependencies]
 # The workspace's own crates. A `version` is pinned alongside `path` so internal
 # edges are not wildcards (cargo-deny's `bans.wildcards = deny`).
-wickra-feature-store-core = { version = "0.1.1", path = "crates/feature-store-core", default-features = false }
+wickra-feature-store-core = { version = "0.1.2", path = "crates/feature-store-core", default-features = false }
 # Wickra ecosystem. The feature store reads local candle data only and never
 # opens a network connection.
 #

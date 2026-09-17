@@ -10,7 +10,7 @@
     <AssemblyName>Wickra.FeatureStore</AssemblyName>
 
     <PackageId>Wickra.FeatureStore</PackageId>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
     <Authors>kingchenc</Authors>
     <Description>Build deterministic, ML-ready feature matrices for .NET over the Wickra C ABI: describe a feature spec once and fold OHLCV candles into a byte-identical feature matrix across every language binding.</Description>
     <PackageLicenseExpression>MIT OR Apache-2.0</PackageLicenseExpression>
