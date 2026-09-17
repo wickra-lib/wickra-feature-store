@@ -1,6 +1,6 @@
 {
   "name": "wickra-feature-store-darwin-x64",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Native binding for wickra-feature-store (macOS x64). Installed automatically as an optional dependency of wickra-feature-store on matching platforms.",
   "main": "wickra-feature-store.darwin-x64.node",
   "files": [

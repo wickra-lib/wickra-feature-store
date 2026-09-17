@@ -14,7 +14,7 @@ SMA and the last bar of each symbol has a `null` label (no future bar), for
 example:
 
 ```text
-wickra-feature-store 0.1.1
+wickra-feature-store 0.1.2
 columns: ["Sma(2)", "price.close", "fwd_return(1)"]
 rows: 6
 {"columns":["Sma(2)","price.close","fwd_return(1)"], ...}

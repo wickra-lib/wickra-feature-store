@@ -1,7 +1,7 @@
 Package: wickrafeaturestore
 Type: Package
 Title: Deterministic ML-Ready Feature Matrices
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: person("kingchenc", role = c("aut", "cre"), email = "support@wickra.org")
 Description: R bindings for wickra-feature-store over its C ABI hub: describe a
     feature spec once and fold OHLCV candles into a byte-identical feature
