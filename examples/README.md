@@ -5,6 +5,21 @@ feature store from the same spec — a 2-period SMA, the close price, and a
 1-bar forward-return label — over a two-symbol inline universe (`AAA` rising
 `10 → 11 → 12`, `BBB` rising `20 → 22 → 24`) and prints the resulting matrix.
 
+## What every example prints
+
+Every example prints the version and the feature matrix. The matrix has three
+columns — `Sma(2)`, `price.close`, `fwd_return(1)` — and six rows (three bars
+per symbol, `AAA` before `BBB` in sorted order). The warmup bar has a `null`
+SMA and the last bar of each symbol has a `null` label (no future bar), for
+example:
+
+```text
+wickra-feature-store 0.1.1
+columns: ["Sma(2)", "price.close", "fwd_return(1)"]
+rows: 6
+{"columns":["Sma(2)","price.close","fwd_return(1)"], ...}
+```
+
 ## Rust — `examples/rust/`
 
 As the CI examples job runs it, from the repository root:
