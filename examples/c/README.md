@@ -25,12 +25,23 @@ A static library (`libwickra_feature_store.a` / `wickra_feature_store.lib`) is e
 
 ## Build and run the examples
 
-With CMake, as the CI C ABI job does:
+### With CMake (portable, used by CI)
 
 ```sh
 cmake -S examples/c -B examples/c/build
 cmake --build examples/c/build --config Release
 ctest --test-dir examples/c/build -C Release --output-on-failure
+```
+
+### Directly with a compiler
+
+```sh
+# Linux / macOS
+cc examples/c/build_features.c -I bindings/c/include -L target/release -lwickra_feature_store -lm -o build_features
+LD_LIBRARY_PATH=target/release ./build_features        # macOS: DYLD_LIBRARY_PATH
+
+# Windows (MinGW gcc, linking the DLL directly)
+gcc examples/c/build_features.c -I bindings/c/include target/release/wickra_feature_store.dll -lm -o build_features.exe
 ```
 
 ## The examples

@@ -37,7 +37,7 @@ The output lands in `pkg/`.
 ## Quick start
 
 ```js
-import init, { FeatureStore } from "./pkg/wickra_feature_store_wasm.js";
+import init, { FeatureStore } from "wickra-feature-store-wasm";
 
 await init();
 
