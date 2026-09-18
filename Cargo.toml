@@ -49,7 +49,7 @@ wickra-data = "1.0"
 # "=0.1.4" to the same crate today, but a consumer or a sibling that lands on a
 # newer patch would leave two copies of the engine in one graph, and two copies
 # do not share a BacktestReport or a Candle. Move this with the family.
-wickra-backtest-core = "=0.1.6"
+wickra-backtest-core = "=0.1.7"
 # Serialization — the data-driven boundary (spec/command/matrix as JSON).
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
