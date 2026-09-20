@@ -4,14 +4,14 @@
 
 [![CI](https://raw.githubusercontent.com/wickra-lib/.github/main/profile/badges/wickra-feature-store/ci.svg)](https://github.com/wickra-lib/wickra-feature-store/actions/workflows/ci.yml)
 [![codecov](https://raw.githubusercontent.com/wickra-lib/.github/main/profile/badges/wickra-feature-store/codecov.svg)](https://codecov.io/gh/wickra-lib/wickra-feature-store)
-[![Go module](https://raw.githubusercontent.com/wickra-lib/.github/main/profile/badges/wickra-feature-store/go.svg)](https://pkg.go.dev/github.com/wickra-lib/wickra-feature-store/bindings/go)
+[![Go module](https://raw.githubusercontent.com/wickra-lib/.github/main/profile/badges/wickra-feature-store/go.svg)](https://pkg.go.dev/github.com/wickra-lib/wickra-feature-store-go)
 [![License: MIT OR Apache-2.0](https://raw.githubusercontent.com/wickra-lib/.github/main/profile/badges/wickra-feature-store/license.svg)](https://github.com/wickra-lib/wickra-feature-store#license)
 
 # Wickra Feature Store — Go
 
 ---
 
-**Turn OHLCV and microstructure event streams into ML-ready feature matrices over 497 O(1) streaming indicators — for Go. `go get github.com/wickra-lib/wickra-feature-store/bindings/go` — over the C ABI via cgo, prebuilt library bundled in the module.**
+**Turn OHLCV and microstructure event streams into ML-ready feature matrices over 497 O(1) streaming indicators — for Go. `go get github.com/wickra-lib/wickra-feature-store-go` — over the C ABI via cgo, prebuilt library bundled in the module.**
 
 Go bindings for the Wickra feature-matrix core over its C ABI hub via cgo. A
 `FeatureStore` is built from a spec JSON and driven over a JSON boundary, so the
