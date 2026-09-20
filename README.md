@@ -140,7 +140,7 @@ cargo add wickra-feature-store           # Rust
 pip install wickra-feature-store         # Python
 npm install wickra-feature-store         # Node.js
 dotnet add package Wickra.FeatureStore   # C#
-go get github.com/wickra-lib/wickra-feature-store/bindings/go   # Go
+go get github.com/wickra-lib/wickra-feature-store-go   # Go
 ```
 
 Java ships to Maven Central (`org.wickra:wickra-feature-store`), R to r-universe
