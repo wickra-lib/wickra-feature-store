@@ -16,7 +16,7 @@ workspace = true
 # Default features off (inherited from the workspace edge); the `parallel`
 # feature below re-enables rayon so the default bench measures the parallel path
 # and `--no-default-features` measures the sequential (WASM) path.
-wickra-feature-store-core = { path = "../feature-store-core", version = "0.1.2", default-features = false }
+wickra-feature-store-core = { path = "../feature-store-core", version = "0.1.3", default-features = false }
 
 [dev-dependencies]
 criterion = { workspace = true }
