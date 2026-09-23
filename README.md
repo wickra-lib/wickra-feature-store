@@ -69,7 +69,7 @@ println!("{}", matrix.to_json());
 
 ## Status
 
-**0.1.2 — the current release.** The API is settling; the matrix format and
+**0.1.3 — the current release.** The API is settling; the matrix format and
 command protocol are stable and pinned by [golden tests](golden/).
 
 ## Documentation

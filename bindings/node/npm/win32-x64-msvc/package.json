@@ -1,6 +1,6 @@
 {
   "name": "wickra-feature-store-win32-x64-msvc",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Native binding for wickra-feature-store (Windows x64 MSVC). Installed automatically as an optional dependency of wickra-feature-store on matching platforms.",
   "main": "wickra-feature-store.win32-x64-msvc.node",
   "files": [

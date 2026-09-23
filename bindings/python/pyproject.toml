@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "wickra-feature-store"
-version = "0.1.2"
+version = "0.1.3"
 description = "The data-driven feature-matrix core: build a FeatureStore from a spec, drive it with commands, read back feature matrices."
 readme = "README.md"
 license = "MIT OR Apache-2.0"
