@@ -241,5 +241,5 @@ fn spec_defaults_are_stable() {
     assert_eq!(spec.warmup, WarmupPolicy::Nan);
     assert!(spec.scaling.is_none());
     assert!(spec.window.is_none());
-    assert!(spec.labels.is_empty());
+    assert_eq!(spec.labels, Vec::new());
 }
