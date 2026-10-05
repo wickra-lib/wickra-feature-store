@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-05
+
+A follow-up release on the wickra 2.0 family.
+
+### Changed
+
+- **Built on wickra 2.0 and wickra-backtest 0.2.0.** `wickra-core` moves from
+  1.0 to 2.0, the formula-audit release of the indicator core; the exact pin on
+  `wickra-backtest-core` moves from =0.1.9 to =0.2.0; every tracked lockfile
+  follows. Indicators the audit corrected return the values of their published
+  definitions; wickra's changelog lists them, with the warmup changes and the
+  new defaults.
+
 ## [0.1.4] - 2026-09-27
 
 A follow-up release: the feature store and its bindings are unchanged. It pins
@@ -393,7 +406,8 @@ publishes the refreshed dependency tree and toolchain pins.
 - Documentation: `docs/FEATURES.md`, `LABELS.md`, `SCALING.md`, `STREAMING.md`,
   `OUTPUT_FORMATS.md` and `Cookbook.md`.
 
-[Unreleased]: https://github.com/wickra-lib/wickra-feature-store/compare/v0.1.4...HEAD
+[Unreleased]: https://github.com/wickra-lib/wickra-feature-store/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/wickra-lib/wickra-feature-store/compare/v0.1.4...v0.2.0
 [0.1.4]: https://github.com/wickra-lib/wickra-feature-store/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/wickra-lib/wickra-feature-store/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/wickra-lib/wickra-feature-store/compare/v0.1.1...v0.1.2
