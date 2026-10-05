@@ -41,7 +41,6 @@ wickra-feature-store-core = { version = "0.1.4", path = "crates/feature-store-co
 # tree carries one `wickra-core` and one set of indicator types rather than two
 # that share no types at all.
 wickra-core = "1.0"
-wickra-data = "1.0"
 # The only name -> indicator registry in the ecosystem: the backtester's factory
 # resolves an indicator by name + params into an object-safe indicator, and
 # `registry::feed_of` reports which side feed each one consumes.
