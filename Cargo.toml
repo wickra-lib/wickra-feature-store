@@ -19,7 +19,7 @@ members = ["crates/feature-store-core", "crates/feature-store-cli", "crates/feat
 exclude = ["fuzz"]
 
 [workspace.package]
-version = "0.1.4"
+version = "0.2.0"
 edition = "2021"
 rust-version = "1.86"
 license = "MIT OR Apache-2.0"
@@ -33,14 +33,14 @@ categories = ["finance", "command-line-utilities"]
 [workspace.dependencies]
 # The workspace's own crates. A `version` is pinned alongside `path` so internal
 # edges are not wildcards (cargo-deny's `bans.wildcards = deny`).
-wickra-feature-store-core = { version = "0.1.4", path = "crates/feature-store-core", default-features = false }
+wickra-feature-store-core = { version = "0.2.0", path = "crates/feature-store-core", default-features = false }
 # Wickra ecosystem. The feature store reads local candle data only and never
 # opens a network connection.
 #
 # Held at the same major as the copy `wickra-backtest-core` resolves, so the
 # tree carries one `wickra-core` and one set of indicator types rather than two
 # that share no types at all.
-wickra-core = "1.0"
+wickra-core = "2.0"
 # The only name -> indicator registry in the ecosystem: the backtester's factory
 # resolves an indicator by name + params into an object-safe indicator, and
 # `registry::feed_of` reports which side feed each one consumes.
@@ -48,7 +48,7 @@ wickra-core = "1.0"
 # "=0.1.4" to the same crate today, but a consumer or a sibling that lands on a
 # newer patch would leave two copies of the engine in one graph, and two copies
 # do not share a BacktestReport or a Candle. Move this with the family.
-wickra-backtest-core = "=0.1.9"
+wickra-backtest-core = "=0.2.0"
 # Serialization — the data-driven boundary (spec/command/matrix as JSON).
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
