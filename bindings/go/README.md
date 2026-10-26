@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://wickra.org"><img src="https://raw.githubusercontent.com/wickra-lib/.github/main/profile/wickra-banner.svg?v=514-8" alt="Wickra Feature Store — turn OHLCV and microstructure event streams into ML-ready feature matrices over 497 streaming indicators, deterministic across ten languages" width="100%"></a>
+  <a href="https://wickra.org"><img src="https://raw.githubusercontent.com/wickra-lib/.github/main/profile/wickra-banner.svg?v=514-8" alt="Wickra Feature Store — turn OHLCV and microstructure event streams into ML-ready feature matrices over 495 streaming indicators, deterministic across ten languages" width="100%"></a>
 </p>
 
 [![CI](https://raw.githubusercontent.com/wickra-lib/.github/main/profile/badges/wickra-feature-store/ci.svg)](https://github.com/wickra-lib/wickra-feature-store/actions/workflows/ci.yml)
@@ -11,7 +11,7 @@
 
 ---
 
-**Turn OHLCV and microstructure event streams into ML-ready feature matrices over 497 O(1) streaming indicators — for Go. `go get github.com/wickra-lib/wickra-feature-store-go` — over the C ABI via cgo, prebuilt library bundled in the module.**
+**Turn OHLCV and microstructure event streams into ML-ready feature matrices over 495 O(1) streaming indicators — for Go. `go get github.com/wickra-lib/wickra-feature-store-go` — over the C ABI via cgo, prebuilt library bundled in the module.**
 
 Go bindings for the Wickra feature-matrix core over its C ABI hub via cgo. A
 `FeatureStore` is built from a spec JSON and driven over a JSON boundary, so the

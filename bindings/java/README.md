@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://wickra.org"><img src="https://raw.githubusercontent.com/wickra-lib/.github/main/profile/wickra-banner.svg?v=514-8" alt="Wickra Feature Store — turn OHLCV and microstructure event streams into ML-ready feature matrices over 497 streaming indicators, deterministic across ten languages" width="100%"></a>
+  <a href="https://wickra.org"><img src="https://raw.githubusercontent.com/wickra-lib/.github/main/profile/wickra-banner.svg?v=514-8" alt="Wickra Feature Store — turn OHLCV and microstructure event streams into ML-ready feature matrices over 495 streaming indicators, deterministic across ten languages" width="100%"></a>
 </p>
 
 [![CI](https://raw.githubusercontent.com/wickra-lib/.github/main/profile/badges/wickra-feature-store/ci.svg)](https://github.com/wickra-lib/wickra-feature-store/actions/workflows/ci.yml)
@@ -11,7 +11,7 @@
 
 ---
 
-**Turn OHLCV and microstructure event streams into ML-ready feature matrices over 497 O(1) streaming indicators — for Java. `org.wickra:wickra-feature-store` — prebuilt native library inside the jar, no JNI, no system dependencies.**
+**Turn OHLCV and microstructure event streams into ML-ready feature matrices over 495 O(1) streaming indicators — for Java. `org.wickra:wickra-feature-store` — prebuilt native library inside the jar, no JNI, no system dependencies.**
 
 JVM bindings for the Wickra feature-matrix core over its C ABI hub, using the
 Foreign Function & Memory API (FFM / Panama). A `FeatureStore` is built from a
