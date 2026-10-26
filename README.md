@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://wickra.org"><img src="https://raw.githubusercontent.com/wickra-lib/.github/main/profile/wickra-banner.svg?v=514-8" alt="Wickra Feature Store — turn OHLCV and microstructure event streams into ML-ready feature matrices over 497 streaming indicators, deterministic across ten languages" width="100%"></a>
+  <a href="https://wickra.org"><img src="https://raw.githubusercontent.com/wickra-lib/.github/main/profile/wickra-banner.svg?v=514-8" alt="Wickra Feature Store — turn OHLCV and microstructure event streams into ML-ready feature matrices over 495 streaming indicators, deterministic across ten languages" width="100%"></a>
 </p>
 
 [![Built on Wickra](https://raw.githubusercontent.com/wickra-lib/.github/main/profile/badges/wickra-feature-store/built-on.svg)](https://github.com/wickra-lib/wickra)
@@ -24,7 +24,7 @@
 
 ---
 
-**Turn OHLCV and microstructure event streams into ML-ready feature matrices over 497 O(1) streaming indicators — deterministic across ten languages.**
+**Turn OHLCV and microstructure event streams into ML-ready feature matrices over 495 O(1) streaming indicators — deterministic across ten languages.**
 
 > **▶ Live demos:** the backtester compiled to WebAssembly, an equity curve building bar by bar — **[backtest-live.wickra.org](https://backtest-live.wickra.org)**;
 > one StrategySpec side by side in Python, Rust, JS and Go — **[playground.wickra.org](https://playground.wickra.org)**;
@@ -34,8 +34,8 @@
 
 Wickra Feature Store is one data-driven core, `wickra-feature-store-core`: a serde
 **`FeatureSpec`** is folded over each symbol's history with the
-[Wickra](https://github.com/wickra-lib/wickra) indicator library — 497 of them
-resolvable by name — emitting one **feature row per bar**, joining forward-looking
+[Wickra](https://github.com/wickra-lib/wickra) indicator library — the 495
+indicators the backtest registry resolves by name — emitting one **feature row per bar**, joining forward-looking
 **labels**, optionally scaling, and materializing a **feature matrix** — in
 parallel (rayon) or sequentially (the WASM fallback), **byte-for-byte
 identical**.
@@ -115,7 +115,7 @@ produces columns `["Sma(10)", "Rsi(14)", "Macd(12,26,9).hist", "price.close", "f
 ## Features and labels
 
 - **Features** are `indicator`, `price` or `microstructure` columns — see
-  [docs/FEATURES.md](docs/FEATURES.md). Any of the 497 streaming indicators
+  [docs/FEATURES.md](docs/FEATURES.md). Any of the 495 streaming indicators
   is available by its registry name (`Sma`, `Ema`, `Rsi`, `Macd`, …).
 - **Labels** are `forward_return` (arithmetic or log) or `triple_barrier`
   (`+1 / -1 / 0`) — see [docs/LABELS.md](docs/LABELS.md). Look-ahead cells with no
