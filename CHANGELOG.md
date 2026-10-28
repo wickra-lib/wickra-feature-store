@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-10-28
+
+A maintenance release: the feature store and its outputs are unchanged. It
+ships the security fixes in the dependency tree.
+
+### Changed
+
+- **Built on wickra-core 2.1.0.** The lock takes the indicator core's minor
+  release; the `2.0` requirement already admitted it. It adds `RunningDrawdown`
+  and updates `MaxDrawdown` in amortised O(1) with the same values; nothing here
+  computes differently.
+- **The family pins follow the owners' releases.** `wickra-backtest-core` =0.2.0
+  -> =0.2.1 -- the exact pins this repository keeps on its siblings move to the
+  versions those repositories release in the same train, and every tracked
+  lockfile follows.
+- **uv 0.13.5** for the lockfile bootstrap in `scripts/update-lockfiles.sh`.
+- **The documentation quotes the indicator count this repository reaches:** the
+  495 indicators the backtest registry resolves -- bar builders, histogram
+  profiles and a few struct outputs are out of its scope -- rather than the
+  core's 514 or a stale 497. The counts are now set by the family's count
+  engine on every release bump.
+
+### Fixed
+
+- **`central-publishing-maven-plugin` 0.12.0** for the Java binding. Since
+  early October the GitHub runners carry Maven 3.10.0, which writes
+  `maven-metadata-local.xml` and `_remote.repositories` into the staging
+  directory; 0.11.0 bundles them, and Central rejects the deployment with
+  "Bundle has content that does NOT have a .pom file".
+
 ### Security
 
 - **zstd-sys 2.1.2.** RUSTSEC-2026-0410: on wasm32 the allocator shim zstd-sys
@@ -423,7 +453,8 @@ publishes the refreshed dependency tree and toolchain pins.
 - Documentation: `docs/FEATURES.md`, `LABELS.md`, `SCALING.md`, `STREAMING.md`,
   `OUTPUT_FORMATS.md` and `Cookbook.md`.
 
-[Unreleased]: https://github.com/wickra-lib/wickra-feature-store/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/wickra-lib/wickra-feature-store/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/wickra-lib/wickra-feature-store/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/wickra-lib/wickra-feature-store/compare/v0.1.4...v0.2.0
 [0.1.4]: https://github.com/wickra-lib/wickra-feature-store/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/wickra-lib/wickra-feature-store/compare/v0.1.2...v0.1.3
