@@ -731,7 +731,7 @@ checksum = "da7c62ceae207dd37ea5b845da6a0696c799f85e97da1ab5b7910be3c1c80223"
 
 [[package]]
 name = "feature-store-bench"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "codspeed-criterion-compat",
  "wickra-feature-store-core",
@@ -2029,7 +2029,7 @@ dependencies = [
 
 [[package]]
 name = "wickra-feature-store"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "arrow",
  "clap",
@@ -2040,14 +2040,14 @@ dependencies = [
 
 [[package]]
 name = "wickra-feature-store-c"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "wickra-feature-store-core",
 ]
 
 [[package]]
 name = "wickra-feature-store-core"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "arrow",
  "parquet",
@@ -2063,7 +2063,7 @@ dependencies = [
 
 [[package]]
 name = "wickra-feature-store-example"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "serde_json",
  "wickra-feature-store-core",
@@ -2071,7 +2071,7 @@ dependencies = [
 
 [[package]]
 name = "wickra-feature-store-node"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "napi",
  "napi-build",
@@ -2081,7 +2081,7 @@ dependencies = [
 
 [[package]]
 name = "wickra-feature-store-python"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "pyo3",
  "wickra-feature-store-core",
@@ -2089,7 +2089,7 @@ dependencies = [
 
 [[package]]
 name = "wickra-feature-store-wasm"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "getrandom 0.2.17",
  "wasm-bindgen",
