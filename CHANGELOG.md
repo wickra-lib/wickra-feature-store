@@ -21,6 +21,14 @@ ships the security fixes in the dependency tree.
   core's 514 or a stale 497. The counts are now set by the family's count
   engine on every release bump.
 
+### Fixed
+
+- **`central-publishing-maven-plugin` 0.12.0** for the Java binding. Since
+  early October the GitHub runners carry Maven 3.10.0, which writes
+  `maven-metadata-local.xml` and `_remote.repositories` into the staging
+  directory; 0.11.0 bundles them, and Central rejects the deployment with
+  "Bundle has content that does NOT have a .pom file".
+
 ### Security
 
 - **zstd-sys 2.1.2.** RUSTSEC-2026-0410: on wasm32 the allocator shim zstd-sys
