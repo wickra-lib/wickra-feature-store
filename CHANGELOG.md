@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- **The GHSA-6w46-j5rx-g56g entry is gone from `osv-scanner.toml`.** It
+  covered the pytest 8.4.2 pin of the Python 3.9 CI row. That row runs the
+  suite without pytest, so no lock carries an affected pytest any more, and
+  osv-scanner reported the entry as unused.
+- **The RUSTSEC-2024-0436 entry (paste) is gone from `osv-scanner.toml`.**
+  paste is no longer in `Cargo.lock`, so the entry matched nothing.
+
 ## [0.2.1] - 2026-10-28
 
 A maintenance release: the feature store and its outputs are unchanged. It
