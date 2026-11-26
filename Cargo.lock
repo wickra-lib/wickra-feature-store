@@ -733,7 +733,7 @@ checksum = "da7c62ceae207dd37ea5b845da6a0696c799f85e97da1ab5b7910be3c1c80223"
 
 [[package]]
 name = "feature-store-bench"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "codspeed-criterion-compat",
  "wickra-feature-store-core",
@@ -2014,9 +2014,9 @@ dependencies = [
 
 [[package]]
 name = "wickra-backtest-core"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6c4192b5075e3dc4ac7a396bc663d3b4f770291c41404c461568edfd2407d088"
+checksum = "784ef403482c5edce04fbe426840337cd6f56619c60becd38666b7faac7f5827"
 dependencies = [
  "schemars",
  "serde",
@@ -2038,7 +2038,7 @@ dependencies = [
 
 [[package]]
 name = "wickra-feature-store"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "arrow",
  "clap",
@@ -2049,14 +2049,14 @@ dependencies = [
 
 [[package]]
 name = "wickra-feature-store-c"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "wickra-feature-store-core",
 ]
 
 [[package]]
 name = "wickra-feature-store-core"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "arrow",
  "parquet",
@@ -2072,7 +2072,7 @@ dependencies = [
 
 [[package]]
 name = "wickra-feature-store-example"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "serde_json",
  "wickra-feature-store-core",
@@ -2080,7 +2080,7 @@ dependencies = [
 
 [[package]]
 name = "wickra-feature-store-node"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "napi",
  "napi-build",
@@ -2090,7 +2090,7 @@ dependencies = [
 
 [[package]]
 name = "wickra-feature-store-python"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "pyo3",
  "wickra-feature-store-core",
@@ -2098,7 +2098,7 @@ dependencies = [
 
 [[package]]
 name = "wickra-feature-store-wasm"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "getrandom 0.2.17",
  "wasm-bindgen",
