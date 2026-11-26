@@ -49,7 +49,8 @@ impl PyFeatureStore {
 
 /// The native module (`wickra_feature_store._wickra_feature_store`).
 #[pymodule]
-fn _wickra_feature_store(module: &Bound<'_, PyModule>) -> PyResult<()> {
+#[pyo3(name = "_wickra_feature_store")]
+fn wickra_feature_store_extension(module: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add("__version__", env!("CARGO_PKG_VERSION"))?;
     module.add_class::<PyFeatureStore>()?;
     Ok(())
