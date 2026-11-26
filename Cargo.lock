@@ -2014,9 +2014,9 @@ dependencies = [
 
 [[package]]
 name = "wickra-backtest-core"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6c4192b5075e3dc4ac7a396bc663d3b4f770291c41404c461568edfd2407d088"
+checksum = "784ef403482c5edce04fbe426840337cd6f56619c60becd38666b7faac7f5827"
 dependencies = [
  "schemars",
  "serde",
