@@ -78,3 +78,7 @@ reason = "an unfinished multithreaded frame needs CParameter::NbWorkers on a C l
 # .github/requirements/ci-dev-py39.txt. The 3.9 row has since run the suite
 # without pytest, so that lock carries none, and ci-dev-py3.txt is on 9.1.1,
 # outside the advisory; the entry was removed.
+
+[[IgnoredVulns]]
+id = "RUSTSEC-2026-0543"
+reason = "chrono is flagged unmaintained, not vulnerable; it arrives through arrow-array in the parquet stack with no chrono-free release. Remove when that dependency drops it."
